@@ -5,15 +5,13 @@ For this exercise we will use a flask app to deploy the food classification mode
 To download the content of the app clone this repository "https://github.com/teaching-on-testbeds/k8s-ml" or run the following command in your terminal.
 
 ``` shell
-git clone https://github.com/teaching-on-testbeds/k8s-ml.git
+git clone https://github.com/indianspeedster/Deploy_flask.git
 ```
 
 The content of the repository contains everything but the model which you want to deploy so now we will transfer the model from your local host to remote host.
 
-Next copy the path of the model which you saved after completeing lab 7 and enter the below mentioned command in your local terminal
-
 ``` shell
-scp "path of saved model" "name of remote host":"/k8s-ml/"
+scp "path of saved model" "name of remote host":"/users/{username}/Deploy_flask/"
 ```
 
 Now we have our model which we are going to deploy.
@@ -25,47 +23,55 @@ Before going ahead make sure that the folder structure is same as in the picture
 Now we are ready to run the flask app, before that you should check what is the public ip from which the content of the app can be accessed.
 
 ``` shell
-$ ifconfig -a
+$ curl ifconfig.me
 ```
 
-From the output of this command get the public ip of your remote host.
+The output of this command is the public ip of our remote host.
 
-Now, we will create a virtual environment to run the flask app.
+We will be using Docker to containerise the ml-app. Learning Docker is a large process and that is not the part of this exercise. To make sure that you don't get stuck with docker, a Dockerfile is already provided in the repository you cloned.
+
+Before we move ahead let's check if we have docker installed in our system.
 
 ``` shell
-$ sudo apt install virtualenv
-$ virtualenv myenv
-$ source myenv/bin/activate
+$ docker -v
 ```
 
-Next step is to install all the requirements to run the app. on your terminal run :
+The output should be similiar to
 
 ``` shell
-$ pip install -r requirements.txt
+
+Docker version 19.03.15, build 99e3ed8919
 ```
 
-Next and the final step is to run the below mentioned command on your terminal:
+The next step is to get into ks8-ml directory
 
 ``` shell
-$ python app.py
+$ cd Deploy_flask
 ```
 
-Here you go the your flask app with a deep learning model is up and running, the output of the above command will be like this
+Next step is to create a docker image of our flask app and push it to the local registry running at 10.10.1.1:5000
 
 ``` shell
- * Serving Flask app 'app'
- * Debug mode: on
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://127.0.0.1:5000
-Press CTRL+C to quit
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 120-189-601
+
+$ docker build -t my-app:0.0.1 .
+$ docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
+$ docker push 10.10.1.1:5000/my-app:0.0.1
 ```
 
-Now the app is up and running on ip:5000 open the url on your browser and try predicting with different food items.
+Now our docker image is build and is available to use, we can use it any number of time and concurrently on different ports
 
-This exercise is complete.
+For instance we let's run a docker container on port 32001
+
+``` shell
+$ docker run -d -p 32001:5000 10.10.1.1:5000/my-app
+```
+
+-   -d is for detach mode.
+-   -p is to assign the port host_port:container_port.
+
+Get the public ip of your host, go to your browser and run {public_ip}:32001, you will see that your app is up and running there.
+
+This exercise is complete here.
 
 ## Exercise 2: Deploy an image classification App on a kubernetes Pod.
 
@@ -86,8 +92,6 @@ Before going ahead first let's understand what is kubernetes.
 
 Since, Kubernetes is a Container Orchestration platform so we need containers to go ahead with deploying an application on kubernetes. Here in our execise we will be using Docker container.
 
-Learning Docker can be a long process and that is not in the scope of this exercise. Here you will be provided with a *Dockerfile* that can be used to build an image and that image can be used to deploy the app on a kubernetes cluster.
-
 In our cluster node-0 is the master node so we will SSH into node-0
 
 ``` shell
@@ -99,7 +103,8 @@ Next step is to get all the code into our remote host which will be used to depl
 To download the content of the app clone this repository "https://github.com/teaching-on-testbeds/k8s-ml" or run the following command in your terminal.
 
 ``` shell
-git clone https://github.com/teaching-on-testbeds/k8s-ml.git
+$ git clone https://github.com/indianspeedster/ml_app_on_ks_pod.git
+$ cd ml_app_on_ks_pod
 ```
 
 Now we have everything which we are going to need to deploy our app, the last thing we need to check is weather kubernetes and Docker is installed or not.
@@ -121,7 +126,7 @@ In the repository you will see there is a file named *Dockerfile*, this file wil
 to create a docker image run the following command in the shell also make sure that you are in the food_classification directory.
 
 ``` shell
-$ docker build -t my-app:latest .
+$ docker build -t my-app:0.0.2 .
 ```
 
 Now Docker image is ready, we can check the same by running the following command:
@@ -135,24 +140,18 @@ Next step is to push the docker image to the docker registry which is accessible
 First we will tag the image, run the command below to do the same:
 
 ``` shell
-$ docker tag my-app:latest  10.10.1.1:5000/my-app:latest
+$ docker tag my-app:latest  10.10.1.1:5000/my-app:0.0.2
 ```
 
 Next we will push the image to the registry:
 
 ``` shell
-$ docker push 10.10.1.1:5000/my-app:latest
+$ docker push 10.10.1.1:5000/my-app:0.0.2
 ```
 
-To make things simple and easy all our deployments would be done through a .YAML file.
+To make things simple and easy all our deployments would be done through a manifest file deployment.yaml .
 
-to download the file, on your terminal enter:
-
-``` shell
-$ wget https://github.com/indianspeedster/pod_deployment.yaml
-```
-
-To check the content of pod_deployment.yaml file, enter the following commands on your teminal:
+To check the content of deployment.yaml file, enter the following commands on your teminal:
 
 ``` shell
 $ cat pod_deployment.yaml
@@ -174,7 +173,8 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-  type: LoadBalancer
+    nodePort: 32000
+  type: NodePort
 
 
 ---
@@ -194,8 +194,8 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: indianspeedster/py-flask:0.0.1
-        imagePullPolicy: IfNotPresent
+        image: 10.10.1.1:5000/my-app:0.0.2
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
 ```
@@ -209,6 +209,8 @@ $ kubectl apply -f pod_deployment.yaml
 If the output looks similar to this
 
 ``` shell
+service/flask-test-service created
+deployment.apps/flask-test-app created
 ```
 
 Then it means your deployment is successfull.

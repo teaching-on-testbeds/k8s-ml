@@ -19,7 +19,7 @@ Before going ahead first let's understand what is kubernetes.
 
 Since, Kubernetes is a Container Orchestration platform so we need containers to go ahead with deploying an application on kubernetes. Here in our execise we will be using Docker container.
 
-Learning Docker can be a long process and that is not in the scope of this exercise. Here you will be provided with a *Dockerfile* that can be used to build an image and that image can be used to deploy the app on a kubernetes cluster.
+
 
 In our cluster node-0 is the master node so we will SSH into node-0
 
@@ -33,7 +33,8 @@ Next step is to get all the code into our remote host which will be used to depl
 To download the content of the app clone this repository "https://github.com/teaching-on-testbeds/k8s-ml" or run the following command in your terminal.
 
 ``` shell
-git clone https://github.com/teaching-on-testbeds/k8s-ml.git
+$ git clone https://github.com/indianspeedster/ml_app_on_ks_pod.git
+$ cd ml_app_on_ks_pod
 ```
 Now we have everything which we are going to need to deploy our app, the last thing we need to check is weather kubernetes and Docker is installed or not.
 
@@ -53,7 +54,7 @@ In the repository you will see there is a file named *Dockerfile*, this file wil
 to create a docker image run the following command in the shell also make sure that you are in the food_classification directory.
 
 ``` shell
-$ docker build -t my-app:latest .
+$ docker build -t my-app:0.0.2 .
 
 ```
 
@@ -70,24 +71,18 @@ The docker resistry is on 10.10.1.1:5000
 First we will tag the image, run the command below to do the same:
 
 ``` shell
-$ docker tag my-app:latest  10.10.1.1:5000/my-app:latest
+$ docker tag my-app:latest  10.10.1.1:5000/my-app:0.0.2
 ```
 
 Next we will push the image to the registry:
 
 ``` shell
-$ docker push 10.10.1.1:5000/my-app:latest
+$ docker push 10.10.1.1:5000/my-app:0.0.2
 ```
 
-To make things simple and easy all our deployments would be done through a .YAML file. 
+To make things simple and easy all our deployments would be done through a manifest file deployment.yaml . 
 
-to download the file, on your terminal enter:
-
-``` shell
-$ wget https://github.com/indianspeedster/pod_deployment.yaml
-
-```
-To check the content of pod_deployment.yaml file, enter the following commands on your teminal:
+To check the content of deployment.yaml file, enter the following commands on your teminal:
 
 ``` shell
 $ cat pod_deployment.yaml
@@ -109,7 +104,8 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-  type: LoadBalancer
+    nodePort: 32000
+  type: NodePort
 
 
 ---
@@ -129,8 +125,8 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: indianspeedster/py-flask:0.0.1
-        imagePullPolicy: IfNotPresent
+        image: 10.10.1.1:5000/my-app:0.0.2
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
 
@@ -145,7 +141,8 @@ $ kubectl apply -f pod_deployment.yaml
 If the output looks similar to this
 
 ``` shell
-
+service/flask-test-service created
+deployment.apps/flask-test-app created
 ```
 
 Then it means your deployment is successfull.
@@ -169,4 +166,5 @@ $ kubectl get svc -o wide
 In the output you will see the nodeport number, it is the same port number on which the app is running.
 
 Next go to your browser and run ip of any of the nodes colon node port, eg: 192.168.56.453:32000  and you will see that your ml app is up and running, try predicting and hae fun ...!
+
 :::
