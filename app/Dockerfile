@@ -1,7 +1,7 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim-buster
 
-RUN pip install --upgrade pip
+
 # define the present working directory
 RUN pip install virtualenv
 ENV VIRTUAL_ENV=/venv
