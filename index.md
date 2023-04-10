@@ -28,44 +28,48 @@ Click on Next in Finalize section and it will take to the Schedule section. Here
 
 ![Schedule](images/schedule.png)
 
-Click Finish and the profile will start to intantiate, the process will take close to 30 mins and once done you will get a mail saying "Kubernetes Instance Setup Complete". This means that the resources are ready to use and you can login. Since Kubernetes is based on the concept of master and worker node and here in our experiment node-0 and node-1 are master nodes you can login to anyof them and start working.
+Click Finish and the profile will start to intantiate, the process will take close to 30 mins and once done you will get a mail saying "Kubernetes Instance Setup Complete". This means that the resources are ready to use and you can login.
+
+Once the Process is complete the final page will look similar to this, where all three nodes have a tick on them as shown in the image below.
+
+![Profile ready](images/profile_ready.png)
+
+Since Kubernetes is based on the concept of master and worker node and here in our experiment node-0 and node-1 are master nodes you can login to any of them and start next exercises.
+
+This exercise is done here.
 
 ## Exercise: Deploy an image classification app on cloud.
 
 For this exercise we will use a flask app to deploy the food classification model you build in lab 8.
 
-To download the content of the app clone this repository "https://github.com/teaching-on-testbeds/k8s-ml" or run the following command in your terminal.
+To download the content of the app run the following command in your terminal.
 
 ``` shell
-git clone https://github.com/indianspeedster/Deploy_flask.git
+wget https://github.com/teaching-on-testbeds/k8s-ml/tree/main/app
 ```
 
-The content of the repository contains everything but the model which you want to deploy so now we will transfer the model from your local host to remote host.
+The content of the repository contains everything but the model which you want to deploy so now we will transfer the model from your local host to remote host. Make sure that your model is named as "model.h5"
 
 ``` shell
-scp "path of saved model" "name of remote host":"/users/{username}/Deploy_flask/"
+scp "path of saved model" "name of remote host":"/users/{username}/app/"
 ```
 
-Now we have our model which we are going to deploy.
-
-Before going ahead make sure that the folder structure is same as in the picture below
-
-![Folder structure for the flask-app](images/folder.png)
+After transfering the file again log in to node-0.
 
 Now we are ready to run the flask app, before that you should check what is the public ip from which the content of the app can be accessed.
 
 ``` shell
-$ curl ifconfig.me
+curl ifconfig.me
 ```
 
 The output of this command is the public ip of our remote host.
 
-We will be using Docker to containerise the ml-app. Learning Docker is a large process and that is not the part of this exercise. To make sure that you don't get stuck with docker, a Dockerfile is already provided in the repository you cloned.
+We will be using Docker to containerise the ml-app. Learning Docker is a large process and that is not the part of this exercise. To make sure that you don't get stuck with docker, a Dockerfile is already provided in the app you downloaded.
 
 Before we move ahead let's check if we have docker installed in our system.
 
 ``` shell
-$ docker -v
+docker -v
 ```
 
 The output should be similiar to
@@ -75,27 +79,38 @@ The output should be similiar to
 Docker version 19.03.15, build 99e3ed8919
 ```
 
-The next step is to get into ks8-ml directory
+The next step is to get into app directory which contains flask app
 
 ``` shell
-$ cd Deploy_flask
+cd app
 ```
+
+Before going ahead make sure that the folder structure is same as below
+
+-   app
+    -   instance
+    -   static
+    -   templates
+    -   app.py
+    -   Dockerfile
+    -   requirements.txt
+    -   model.h5
 
 Next step is to create a docker image of our flask app and push it to the local registry running at 10.10.1.1:5000
 
 ``` shell
 
-$ docker build -t my-app:0.0.1 .
-$ docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
-$ docker push 10.10.1.1:5000/my-app:0.0.1
+docker build -t my-app:0.0.1 .
+docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
+docker push 10.10.1.1:5000/my-app:0.0.1
 ```
 
-Now our docker image is build and is available to use, we can use it any number of time and concurrently on different ports
+Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports
 
 For instance we let's run a docker container on port 32001
 
 ``` shell
-$ docker run -d -p 32001:5000 10.10.1.1:5000/my-app
+docker run -d -p 32001:5000 10.10.1.1:5000/my-app
 ```
 
 -   -d is for detach mode.
@@ -114,21 +129,22 @@ Before going ahead first let's understand what is kubernetes.
 **Key Features**
 
 -   *Automated deployment and scaling:* Kubernetes automates the deployment and scaling of containerized applications, making it easier to manage and scale complex microservices architectures.
+
 -   *Self-healing:* Kubernetes monitors the health of your applications and automatically restarts or replaces containers if they fail or become unresponsive.
+
 -   *Service discovery and load balancing:* Kubernetes provides built-in service discovery and load balancing, making it easier to manage the networking aspects of your applications.
+
 -   *Rolling updates and rollbacks:* Kubernetes supports rolling updates and rollbacks, allowing you to deploy updates to your applications without downtime.
+
 -   *Config management:* Kubernetes provides built-in support for managing configuration files and secrets, making it easier to manage the configuration of your applications.
+
 -   *Resource management:* Kubernetes allows you to set resource limits and requests for your applications, ensuring that they have the resources they need to run properly.
 
 **Pods** : Pods are a fundamental building block in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way.They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
 
 Since, Kubernetes is a Container Orchestration platform so we need containers to go ahead with deploying an application on kubernetes. Here in our execise we will be using Docker container.
 
-In our cluster node-0 is the master node so we will SSH into node-0
-
-``` shell
-$ ssh cspandey@pc827.emulab.net
-```
+In our cluster node-0 is the master node so we will log into node-0
 
 Next step is to get all the code into our remote host which will be used to deploy the application.
 

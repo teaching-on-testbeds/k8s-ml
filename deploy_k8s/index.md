@@ -9,6 +9,7 @@ Before going ahead first let's understand what is kubernetes.
 **Key Features**
 
 - *Automated deployment and scaling:* Kubernetes automates the deployment and scaling of containerized applications, making it easier to manage and scale complex microservices architectures.
+
 - *Self-healing:* Kubernetes monitors the health of your applications and automatically restarts or replaces containers if they fail or become unresponsive.
 - *Service discovery and load balancing:* Kubernetes provides built-in service discovery and load balancing, making it easier to manage the networking aspects of your applications.
 - *Rolling updates and rollbacks:* Kubernetes supports rolling updates and rollbacks, allowing you to deploy updates to your applications without downtime.
@@ -21,12 +22,8 @@ Since, Kubernetes is a Container Orchestration platform so we need containers to
 
 
 
-In our cluster node-0 is the master node so we will SSH into node-0
+In our cluster node-0 is the master node so we will log into node-0
 
-``` shell
-$ ssh cspandey@pc827.emulab.net
-
-```
 
 Next step is to get all the code into our remote host which will be used to deploy the application.
 

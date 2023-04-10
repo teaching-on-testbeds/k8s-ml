@@ -31,15 +31,16 @@ Click on Next in Finalize section and it will take to the Schedule section. Here
 
 ![Schedule](images/schedule.png)
 
-Click Finish and the profile will start to intantiate, the process will take close to 30 mins and once done you will get a mail saying "Kubernetes Instance Setup Complete". This means that the resources are ready to use and you can login. Since Kubernetes is based on the concept of master and worker node and here in our experiment node-0 and node-1 are master nodes you can login to anyof them and start working. 
+Click Finish and the profile will start to intantiate, the process will take close to 30 mins and once done you will get a mail saying "Kubernetes Instance Setup Complete". This means that the resources are ready to use and you can login.  
+
+Once the Process is complete the final page will look similar to this, where all three nodes have a tick on them as shown in the image below.
+
+![Profile ready](images/profile_ready.png)
 
 
+Since Kubernetes is based on the concept of master and worker node and here in our experiment node-0 and node-1 are master nodes you can login to any of them and start next exercises.
 
-
-
-
-
-
+This exercise is done here.
 
 
 :::

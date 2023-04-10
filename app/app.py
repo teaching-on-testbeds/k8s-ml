@@ -13,7 +13,7 @@ app = Flask(__name__)
 # create the folders when setting up your app
 os.makedirs(os.path.join(app.instance_path, 'uploads'), exist_ok=True)
 
-model = load_model("VGG16.h5")
+model = load_model("model.h5")
 
 def model_predict(img_path, model):
     im = Image.open(img_path).convert('RGB')
