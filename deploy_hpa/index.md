@@ -45,7 +45,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: ml-app-hpa
-  targetCPUUtilizationPercentage: 40
+  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
 kind: Service
@@ -79,13 +79,15 @@ spec:
     spec:
       containers:
       - name: ml-app-hpa
-        image: 10.10.1.1/ml-app:0.0.1
+        image: 10.10.1.1:5000/my-app:0.0.1
         imagePullPolicy: Always
         resources:
-          limits:
-            cpu: "1000m"
           requests:
-            cpu: "1000m"
+            cpu: 1000m
+            memory: 1000Mi
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
         ports:
         - containerPort: 5000
 ```
@@ -121,16 +123,16 @@ if the status shows as running, the pods are healthy.
 Initially you will see that there is only one pod running, but with time when the traffic increases the pods will scale up and when the traffic goes down the pods will scale down.
 
 
-**Testing Horizontal Scalling**
-TO - DO
+Once you complete this exercise make sure to delete the deployment and services running. To delete, run the following command:
+
+```shell
+
+kubectl delete -f deployment_hpa.yaml
+
+```
 
 
 
-
-
-
-
-
-
+This exercise is done here.
 
 :::

@@ -9,7 +9,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: ml-app-hpa
-  targetCPUUtilizationPercentage: 40
+  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
 kind: Service
@@ -46,9 +46,11 @@ spec:
         image: 10.10.1.1:5000/my-app:0.0.1
         imagePullPolicy: Always
         resources:
-          limits:
-            cpu: "1000m"
           requests:
-            cpu: "1000m"
+            cpu: 1000m
+            memory: 1000Mi
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
         ports:
         - containerPort: 5000

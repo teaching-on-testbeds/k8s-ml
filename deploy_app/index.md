@@ -89,21 +89,36 @@ Get the public ip of your host, go to your browser and run {public_ip}:32001, yo
 
 Try doing some predictions.
 
-Once you are done using the app, You can stop it by below mentioned command:
+Once you are done using the container, You can stop it by following the steps mentioned:
 
-
-``` shell
-docker stop <container_id>
-
-```
-
-container_id can be obtained by running 
+First you need to get CONTAINER ID, it can be obtained by running 
 
 ``` shell
 docker ps
 
 ```
-There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the first column.
+The output will be similar to the image below:
+
+![docker_ps_output](images/docker_ps.png)
+
+copy the CONTAINER ID of your container and run
+
+``` shell
+docker stop CONTAINER ID<>
+
+```
+Here for our experiment, you may need to change the classification model, once you change it you need to rebuild the conatiner to make sure that the changes are reflecting in container.
+
+To rebuild the container follow the same step as you did above while building the container for the first time.
+
+``` shell
+
+docker build -t --no-cache my-app:0.0.1 .
+docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
+docker push 10.10.1.1:5000/my-app:0.0.1
+
+```
+In future exercises too you need to follow the same process to rebuild a container.
 
 This exercise is complete here.
 

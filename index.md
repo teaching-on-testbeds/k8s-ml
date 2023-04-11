@@ -120,19 +120,36 @@ Get the public ip of your host, go to your browser and run {public_ip}:32001, yo
 
 Try doing some predictions.
 
-Once you are done using the app, You can stop it by below mentioned command:
+Once you are done using the container, You can stop it by following the steps mentioned:
 
-``` shell
-docker stop <container_id>
-```
-
-container_id can be obtained by running
+First you need to get CONTAINER ID, it can be obtained by running
 
 ``` shell
 docker ps
 ```
 
-There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the first column.
+The output will be similar to the image below:
+
+![docker_ps_output](images/docker_ps.png)
+
+copy the CONTAINER ID of your container and run
+
+``` shell
+docker stop CONTAINER ID<>
+```
+
+Here for our experiment, you may need to change the classification model, once you change it you need to rebuild the conatiner to make sure that the changes are reflecting in container.
+
+To rebuild the container follow the same step as you did above while building the container for the first time.
+
+``` shell
+
+docker build -t --no-cache my-app:0.0.1 .
+docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
+docker push 10.10.1.1:5000/my-app:0.0.1
+```
+
+In future exercises too you need to follow the same process to rebuild a container.
 
 This exercise is complete here.
 
@@ -409,7 +426,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: ml-app-hpa
-  targetCPUUtilizationPercentage: 40
+  targetCPUUtilizationPercentage: 50
 ---
 apiVersion: v1
 kind: Service
@@ -443,13 +460,15 @@ spec:
     spec:
       containers:
       - name: ml-app-hpa
-        image: 10.10.1.1/ml-app:0.0.1
+        image: 10.10.1.1:5000/my-app:0.0.1
         imagePullPolicy: Always
         resources:
-          limits:
-            cpu: "1000m"
           requests:
-            cpu: "1000m"
+            cpu: 1000m
+            memory: 1000Mi
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
         ports:
         - containerPort: 5000
 ```
@@ -482,7 +501,14 @@ if the status shows as running, the pods are healthy.
 
 Initially you will see that there is only one pod running, but with time when the traffic increases the pods will scale up and when the traffic goes down the pods will scale down.
 
-**Testing Horizontal Scalling** TO - DO
+Once you complete this exercise make sure to delete the deployment and services running. To delete, run the following command:
+
+``` shell
+
+kubectl delete -f deployment_hpa.yaml
+```
+
+This exercise is done here.
 <hr>
 
 <small>Questions about this material? Contact Fraida Fund</small>
