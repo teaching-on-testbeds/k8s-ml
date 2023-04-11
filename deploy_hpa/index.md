@@ -15,15 +15,14 @@ The flow chart below demonstrates the working of HPA.
 source: https://granulate.io/blog/kubernetes-autoscaling-the-hpa/
 
 
-To deploy an ML-App with Horizontal pod Auto scaller, We need to add a new resource in our manifest file of kind *HorizontalPodAutoscaler* and make some changes in resource section of deployment and set the limits and requests for cpu usage. Manifest file is already made for this exercise, so you don't need to worry much about that. To download the manifest file run the command:
+To deploy an ML-App with Horizontal pod Auto scaller, We need to add a new resource in our manifest file of kind *HorizontalPodAutoscaler* and make some changes in resource section of deployment and set the limits and requests for cpu usage. Manifest file is already made for this exercise, so you don't need to worry much about that. Manifest file is inside the folder deploy_hpa named as deployment_hpa.yaml :
 
 ```shell
-wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_hpa/deployment_hpa.yaml
+cd ~/k8s-ml/deploy_hpa
 
 ```
 
-
-Understanding the manifest file:
+Let's understand this manifest file:
 
 Run this command to see the manifest file
 

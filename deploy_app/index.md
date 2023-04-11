@@ -7,7 +7,7 @@ For this exercise we will use a flask app to deploy the food classification mode
 To download the content of the app run the following command in your terminal.
 
 ``` shell
-wget https://github.com/teaching-on-testbeds/k8s-ml/tree/main/app
+git clone https://github.com/teaching-on-testbeds/k8s-ml.git
 
 ```
 
@@ -49,7 +49,7 @@ Docker version 19.03.15, build 99e3ed8919
 The next step is to get into app directory which contains flask app
 
 ``` shell
-cd app
+cd k8s-ml/app
 
 ```
 
@@ -79,7 +79,7 @@ Now our docker image is built and is available to use, we can use it any number 
 For instance we let's run a docker container on port 32001
 
 ``` shell
-docker run -d -p 32001:5000 10.10.1.1:5000/my-app
+docker run -d -p 32001:5000 10.10.1.1:5000/my-app:0.0.1
 
 ```
  - -d is for detach mode.
@@ -91,10 +91,20 @@ Try doing some predictions.
 
 Once you are done using the app, You can stop it by below mentioned command:
 
+
 ``` shell
-docker stop 10.10.1.1:5000/my-app
+docker stop <container_id>
 
 ```
+
+container_id can be obtained by running 
+
+``` shell
+docker ps
+
+```
+There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the forst column.
+
 This exercise is complete here.
 
 :::

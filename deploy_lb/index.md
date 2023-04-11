@@ -19,11 +19,11 @@ Let's see a demo to verify that the response always comes from a different pod.
 
 ssh into node-0
 
-To deploy an app with a load balancer we will be needing a manifest file. To download the file run
+To deploy an app with a load balancer we will be needing a manifest file. To file is already there in the folder deploy_lb named as deployment_lb.yaml.
 
 
 ``` shell
-wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_lb/deployment_lb.yaml
+cd ~/k8s-ml/deploy_k8s
 ```
 
 Next let's understand what is there in the deployment_lb.yaml file.
@@ -100,7 +100,7 @@ open your browser and run ip:32000 (here ip is the public ip of any of your node
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
 ``` shell
-kubectl delete -f deployment_k8s.yaml
+kubectl delete -f deployment_lb.yaml
 
 ```
 

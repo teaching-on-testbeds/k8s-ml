@@ -27,11 +27,11 @@ Since, Kubernetes is a Container Orchestration platform so we need containers to
 
 In our cluster node-0 is the master node so we will log into node-0.
 
-To deploy an app on a kubernetes cluster we need a manifest file. We will download the manifest file by running the command:
+To deploy an app on a kubernetes cluster we need a manifest file. We have the manifest in the folder deploy_k8s named as deployment_k8s.yaml , lets go to the folder :
 
 ``` shell
 
-wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_k8s/deployment_k8s.yaml
+cd ~/k8s-ml/deploy_k8s
 
 ```
 
@@ -39,7 +39,8 @@ Next let's understand what is there in the deployment_k8s.yaml file.
 
 
 ```Shell
-cat pod_deployment.yaml
+cat deployment_k8s.yaml
+
 ```
 
 The output will look like this:
@@ -92,7 +93,8 @@ In the deployment flask-test-app you have a container which will pull the docker
 The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
 
 ``` shell
-kubectl apply -f pod_deployment.yaml
+kubectl apply -f deployment_k8s.yaml
+
 ```
 
 If the output looks similar to this
