@@ -88,7 +88,7 @@ Here, the manifest file defines a kubernetes service with name flask-test-servic
 
 In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort  is the port of container and nodePort is the port of the three nodes. 
 
-In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, imagePullPolicy: Always means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry.
+In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, "imagePullPolicy: Always" means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry.
 
 The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
 
