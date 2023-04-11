@@ -69,7 +69,7 @@ Next step is to create a docker image of our flask app and push it to the local 
 
 ``` shell
 
-docker build -t my-app:0.0.1 .
+docker build -t --no-cache my-app:0.0.1 .
 docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
 docker push 10.10.1.1:5000/my-app:0.0.1
 
