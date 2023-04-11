@@ -43,12 +43,12 @@ spec:
     spec:
       containers:
       - name: ml-app-hpa
-        image: 10.10.1.1/ml-app:0.0.1
+        image: 10.10.1.1:5000/my-app:0.0.1
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: "100m"
+            cpu: "200m"
           requests:
-            cpu: "100m"
+            cpu: "200m"
         ports:
         - containerPort: 5000

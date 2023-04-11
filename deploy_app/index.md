@@ -103,7 +103,7 @@ container_id can be obtained by running
 docker ps
 
 ```
-There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the forst column.
+There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the first column.
 
 This exercise is complete here.
 
