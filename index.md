@@ -132,7 +132,7 @@ container_id can be obtained by running
 docker ps
 ```
 
-There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the forst column.
+There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the first column.
 
 This exercise is complete here.
 
@@ -287,7 +287,7 @@ ssh into node-0
 To deploy an app with a load balancer we will be needing a manifest file. To file is already there in the folder deploy_lb named as deployment_lb.yaml.
 
 ``` shell
-cd ~/k8s-ml/deploy_k8s
+cd ~/k8s-ml/deploy_lb
 ```
 
 Next let's understand what is there in the deployment_lb.yaml file.
@@ -331,7 +331,7 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: 10.10.1.1/ml-app:0.0.1
+        image: 10.10.1.1:5000/my-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
