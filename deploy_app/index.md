@@ -74,7 +74,7 @@ docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
 docker push 10.10.1.1:5000/my-app:0.0.1
 
 ```
-Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports
+Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
 
 For instance we let's run a docker container on port 32001
 
@@ -87,6 +87,14 @@ docker run -d -p 32001:5000 10.10.1.1:5000/my-app
 
 Get the public ip of your host, go to your browser and run {public_ip}:32001, you will see that your app is up and running there.
 
+Try doing some predictions.
+
+Once you are done using the app, You can stop it by below mentioned command:
+
+``` shell
+docker stop 10.10.1.1:5000/my-app
+
+```
 This exercise is complete here.
 
 :::

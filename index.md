@@ -118,6 +118,14 @@ docker run -d -p 32001:5000 10.10.1.1:5000/my-app
 
 Get the public ip of your host, go to your browser and run {public_ip}:32001, you will see that your app is up and running there.
 
+Try doing some predictions.
+
+Once you are done using the app, You can stop it by below mentioned command:
+
+``` shell
+docker stop 10.10.1.1:5000/my-app
+```
+
 This exercise is complete here.
 
 ## Exercise 2: Deploy an image classification App on a kubernetes Pod.
@@ -128,88 +136,36 @@ Before going ahead first let's understand what is kubernetes.
 
 **Key Features**
 
--   *Automated deployment and scaling:* Kubernetes automates the deployment and scaling of containerized applications, making it easier to manage and scale complex microservices architectures.
+-   *Container Orchestration:* Kubernetes helps to automate the deployment, scaling and management of applications that are containerized. it also helps to manage containers and their interdependency.
 
--   *Self-healing:* Kubernetes monitors the health of your applications and automatically restarts or replaces containers if they fail or become unresponsive.
+-   *Self-healing:* If any containers fail, kubernetes can automatically detect it and replace it with a fully functional container and make sure that the application is always available and running.
 
--   *Service discovery and load balancing:* Kubernetes provides built-in service discovery and load balancing, making it easier to manage the networking aspects of your applications.
+-   *Service discovery and load balancing:* Kubernetes provides a built-in service discovery mechanism which helps containers to find other containers running inside the cluster and communicate with each other, even as they are dynamically created and destroyed. So, everytime a new container comes up, we don't need to network the same with other containers but it by default gets networked. Kubernetes also have a built-in load balancing mechanism that can distribute traffic across multiple instances of your application. In next exercise we will be implementing load balancing on our app.
 
--   *Rolling updates and rollbacks:* Kubernetes supports rolling updates and rollbacks, allowing you to deploy updates to your applications without downtime.
+-   *Resource management:* Kubernetes allows you to set resource limits and requests for your applications, ensuring that the application have the resources to run efficiently. we will see the implementation of this in exercise 4 where we limit the cpu usage by 40%.
 
--   *Config management:* Kubernetes provides built-in support for managing configuration files and secrets, making it easier to manage the configuration of your applications.
-
--   *Resource management:* Kubernetes allows you to set resource limits and requests for your applications, ensuring that they have the resources they need to run properly.
-
-**Pods** : Pods are a fundamental building block in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way.They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
+**Pods** : Pods are the basic components in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way.They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
 
 Since, Kubernetes is a Container Orchestration platform so we need containers to go ahead with deploying an application on kubernetes. Here in our execise we will be using Docker container.
 
-In our cluster node-0 is the master node so we will log into node-0
+In our cluster node-0 is the master node so we will log into node-0.
 
-Next step is to get all the code into our remote host which will be used to deploy the application.
-
-To download the content of the app clone this repository "https://github.com/teaching-on-testbeds/k8s-ml" or run the following command in your terminal.
+To deploy an app on a kubernetes cluster we need a manifest file. We will download the manifest file by running the command:
 
 ``` shell
-$ git clone https://github.com/indianspeedster/ml_app_on_ks_pod.git
-$ cd ml_app_on_ks_pod
+
+wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_k8s/deployment_k8s.yaml
 ```
 
-Now we have everything which we are going to need to deploy our app, the last thing we need to check is weather kubernetes and Docker is installed or not.
-
-To check kubernetese version :
+Next let's understand what is there in the deployment_k8s.yaml file.
 
 ``` shell
-$ kubectl -v
+cat pod_deployment.yaml
 ```
 
-To check Docker version :
+The output will look like this:
 
 ``` shell
-$ docker -v
-```
-
-In the repository you will see there is a file named *Dockerfile*, this file will be used to create a docker image which further will be pulled by kubernetes pods.
-
-to create a docker image run the following command in the shell also make sure that you are in the food_classification directory.
-
-``` shell
-$ docker build -t my-app:0.0.2 .
-```
-
-Now Docker image is ready, we can check the same by running the following command:
-
-``` shell
-$ docker images
-```
-
-Next step is to push the docker image to the docker registry which is accessible from the kubernetes cluster. The docker resistry is on 10.10.1.1:5000
-
-First we will tag the image, run the command below to do the same:
-
-``` shell
-$ docker tag my-app:latest  10.10.1.1:5000/my-app:0.0.2
-```
-
-Next we will push the image to the registry:
-
-``` shell
-$ docker push 10.10.1.1:5000/my-app:0.0.2
-```
-
-To make things simple and easy all our deployments would be done through a manifest file deployment.yaml .
-
-To check the content of deployment.yaml file, enter the following commands on your teminal:
-
-``` shell
-$ cat pod_deployment.yaml
-```
-
-compare the content of the file to make sure that you have loaded the correct file.
-
-``` shell
-$ cat pod_deployment.yaml
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -223,7 +179,6 @@ spec:
     targetPort: 5000
     nodePort: 32000
   type: NodePort
-
 
 ---
 apiVersion: apps/v1
@@ -242,16 +197,22 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: 10.10.1.1:5000/my-app:0.0.2
+        image: 10.10.1.1:5000/my-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
 ```
 
-The last and final step is to apply the content of the deployment.yaml file. run the command below to do so:
+Here, the manifest file defines a kubernetes service with name flask-test-service and a kubernetes deployment named flask-test-app.
+
+In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort is the port of container and nodePort is the port of the three nodes.
+
+In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, imagePullPolicy: Always means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry.
+
+The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
 
 ``` shell
-$ kubectl apply -f pod_deployment.yaml
+kubectl apply -f pod_deployment.yaml
 ```
 
 If the output looks similar to this
@@ -268,7 +229,7 @@ Since the content of our pod is large so it will take close to a minute for the 
 To check the status of pod run the below mentioned command:
 
 ``` shell
-$ kubectl get pods -o wide
+kubectl get pods -o wide
 ```
 
 if the status of pods shows as Running then it means the pod is healthy and is running.
@@ -276,12 +237,26 @@ if the status of pods shows as Running then it means the pod is healthy and is r
 Since our pod is running on the cluster via a service, we also need to check the status of the service. To check run the command:
 
 ``` shell
-$ kubectl get svc -o wide
+kubectl get svc -o wide
 ```
 
 In the output you will see the nodeport number, it is the same port number on which the app is running.
 
-Next go to your browser and run ip of any of the nodes colon node port, eg: 192.168.56.453:32000 and you will see that your ml app is up and running, try predicting and hae fun ...!
+Use the below mentioned command to know the ip of your node.
+
+``` shell
+curl ifconfig.me
+```
+
+Next go to your browser and run ip of any of the nodes colon node port, eg: 192.168.56.453:32000 and you will see that your ml app is up and running, try making predictions from the app.
+
+When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
+
+``` shell
+kubectl delete -f deployment_k8s.yaml
+```
+
+This exercise is complete.
 
 ## Exercise 3: Scaling a ML-app (Part-1)
 
@@ -301,107 +276,88 @@ Let's see a demo to verify that the response always comes from a different pod.
 
 ssh into node-0
 
+To deploy an app with a load balancer we will be needing a manifest file. To download the file run
+
 ``` shell
-$ ssh cspandey@pc827.emulab.net
+wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_lb/deployment_lb.yaml
 ```
 
-create a directory load_balancing_demo
+Next let's understand what is there in the deployment_lb.yaml file.
 
 ``` shell
-$ mkdir load_balancing_demo
-$ cd load_balancing_demo
+cat deployment_lb.yaml
 ```
 
-Get a sample deployment.yaml file that can be used to deploy a load balancer as service.
+The output will be as follow
 
 ``` shell
-$ wget https://github.com/indianspeedster/deploy_loadbalancer.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-test-service
+spec:
+  selector:
+    app: flask-test-app
+  ports:
+  - protocol: "TCP"
+    port: 6000
+    targetPort: 5000
+    nodePort: 32000
+  type: LoadBalancer
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-test-app
+spec:
+  selector:
+    matchLabels:
+      app: flask-test-app
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: flask-test-app
+    spec:
+      containers:
+      - name: flask-test-app
+        image: 10.10.1.1/ml-app:0.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
 ```
 
-Deploy load balancer as a service.
+Here, the manifest file defines a kubernetes service of type LoadBalancer with name flask-test-service and a kubernetes deployment named flask-test-app.
+
+In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort is the port of container and nodePort is the port of the three nodes.
+
+In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, imagePullPolicy: Always means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry, you can see replicas:5 which means that the deployment will create 5 replicas of the app and all will be served through the load balancer where the traffic will be divided equally.
+
+Next step is to deploy this app with a load balancer through the help of the manifest file deployment_lb.yaml.
 
 ``` shell
-$ kubectl apply -f deploy_loadbalancer.yaml
-```
-
-The command above will deploy 5 replicas of a simple flask app which return output as hello user from "pod_name". pod_name is the name of the pod from which the user is getting a response.
-
-got to your web browser and enter public ip of any of your node and port 32000, you will get a response.
-
-To see all the pods running you can run the command:
-
-``` shell
-$ kubectl get pods
-```
-
-You can match the pod_name with the pod from which you are getting response.
-
-Also, to check that at a specific time how much cpu memory a pod is using, run the command:
-
-``` shell
-
-$ kubectl top pods
-```
-
-So, Now we understood that how exactly load balancing work.
-
-Next step will be to deploy a ML app with a load balancer.
-
-The steps will be similar with what we did in exercise 2. the only difference is that now we will be using a seperate deployment.yaml file which will specify that we will be creating 5 different replicas of the same ml app on 5 seperate pods.
-
-Clone the repository that contains the the Flask ML app to your remote:
-
-``` shell
-$ git clone https://github.com/teaching-on-testbeds/k8s-ml-lb.git
-```
-
-get inside the repository:
-
-``` shell
-$ cd k8s-ml-lb
-```
-
-get your ml model from your local through scp and make sure that the model is named as ml-lb.h5
-
-Create a docker image for the ml-app by using the command.
-
-``` shell
-$ docker build -t --no-cache ml-app:latest .
-```
-
-Tag the docker image to push it to the local registry
-
-``` shell
-$ docker tag ml-app:latest  10.10.1.1:5000/ml-app:latest
-```
-
-Push the image to the registry:
-
-``` shell
-$ docker push 10.10.1.1:5000/ml-app:latest
-```
-
-The last task is to launch the scaled ML application by utilizing a load balancer that has a static scaling configuration of five pods.
-
-On your remote terminal run:
-
-``` shell
-$ kubectl apply -f deployment_lb.yaml
+kubectl apply -f deployment_lb.yaml
 ```
 
 To check if the deployment is running fine after 2 mins run
 
 ``` shell
-$ kubectl get pods
+kubectl get pods
 ```
 
 If the status of all pods says as "Running" this means that the pods are healthy and running fine.
 
 open your browser and run ip:32000 (here ip is the public ip of any of your nodes) and you can see that your ml app is up and running try making predictions.
 
-**Testing Load balancing**
+When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
-*Content to be added*
+``` shell
+kubectl delete -f deployment_k8s.yaml
+```
+
+This exercise is complete here.
 
 ## Exercise 3: Scaling a ML-app (Part-2)
 
@@ -417,34 +373,10 @@ The flow chart below demonstrates the working of HPA.
 
 source: https://granulate.io/blog/kubernetes-autoscaling-the-hpa/
 
-To deploy an ML-App with Horizontal pod Auto scaller, We need to add a new resource in our manifest file of kind *HorizontalPodAutoscaler* and make some changes in resource section of deployment and set the limits and requests for cpu usage. Manifest file is already made for this exercise, so you don't need to worry much about that.
-
-Clone the repository that contains the Flask ML app and other files for Horizontal scalling:
+To deploy an ML-App with Horizontal pod Auto scaller, We need to add a new resource in our manifest file of kind *HorizontalPodAutoscaler* and make some changes in resource section of deployment and set the limits and requests for cpu usage. Manifest file is already made for this exercise, so you don't need to worry much about that. To download the manifest file run the command:
 
 ``` shell
-$ cd ~/
-$ git clone https://github.com/teaching-on-testbeds/k8s-ml-hs.git
-$ cd k8s-ml-h5
-```
-
-Get your ml model from your local to the same folder through scp.
-
-Create a docker image for the ml-app by using the command.
-
-``` shell
-$ docker build -t --no-cache ml-app-hs:latest .
-```
-
-Tag the docker image to push it to the local registry
-
-``` shell
-$ docker tag ml-app-hs:latest  10.10.1.1:5000/ml-app-hs:latest
-```
-
-Push the image to the registry:
-
-``` shell
-$ docker push 10.10.1.1:5000/ml-app-hs:latest
+wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_hpa/deployment_hpa.yaml
 ```
 
 Understanding the manifest file:
@@ -452,21 +384,82 @@ Understanding the manifest file:
 Run this command to see the manifest file
 
 ``` shell
-$ cat deployment_hs.yaml
+cat deployment_hpa.yaml
+```
+
+The content will look similar to this :
+
+``` shell
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ml-app-hpa
+spec:
+  maxReplicas: 5
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ml-app-hpa
+  targetCPUUtilizationPercentage: 40
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-test-service
+spec:
+  selector:
+    app: ml-app-hpa
+  ports:
+  - protocol: "TCP"
+    port: 6000
+    targetPort: 5000
+    nodePort: 32000
+  type: LoadBalancer
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-app-hpa
+spec:
+  selector:
+    matchLabels:
+      app: ml-app-hpa
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ml-app-hpa
+    spec:
+      containers:
+      - name: ml-app-hpa
+        image: 10.10.1.1/ml-app:0.0.1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "100m"
+          requests:
+            cpu: "100m"
+        ports:
+        - containerPort: 5000
 ```
 
 Here you can see that there are three kind of resources :
 
--   HorizontalPodAutoscaler :- This creates the horizontal pod autoscaler
--   Service :- This creates a service which is used to redirect tcp requests on in between pods and nodes.
--   Deployment :- This creates a deployment of our flask app on a single pod with cpu limits to track the uses of cpu.
+-   HorizontalPodAutoscaler :- This creates the horizontal pod autoscaler which starts scalling up the number of pods when the cpu usage goes above 40%.
+
+-   Service :- This creates a service which is used to redirect tcp requests in between pods and nodes which also has a load balancer.
+
+-   Deployment :- This creates a deployment of our flask app on a single pod with cpu limits to track the usage of cpu and make sure that the cpu limits and requests doesnot cross 100.
 
 Now we will use this manifest file to deploy our app.
 
 On your terminal run:
 
 ``` shell
-$ kubectl apply -f deployment_hs.yaml
+kubectl apply -f deployment_hs.yaml
 ```
 
 Now our ml-app is deployed with horizontal scalling.
@@ -474,7 +467,7 @@ Now our ml-app is deployed with horizontal scalling.
 To check the healt of pods run
 
 ``` shell
-$ kubectl get pods
+kubectl get pods
 ```
 
 if the status shows as running, the pods are healthy.

@@ -8,88 +8,43 @@ Before going ahead first let's understand what is kubernetes.
 
 **Key Features**
 
-- *Automated deployment and scaling:* Kubernetes automates the deployment and scaling of containerized applications, making it easier to manage and scale complex microservices architectures.
+- *Container Orchestration:* Kubernetes helps to automate the deployment, scaling and management of applications that are containerized. it also helps to manage containers and their interdependency.
 
-- *Self-healing:* Kubernetes monitors the health of your applications and automatically restarts or replaces containers if they fail or become unresponsive.
-- *Service discovery and load balancing:* Kubernetes provides built-in service discovery and load balancing, making it easier to manage the networking aspects of your applications.
-- *Rolling updates and rollbacks:* Kubernetes supports rolling updates and rollbacks, allowing you to deploy updates to your applications without downtime.
-- *Config management:* Kubernetes provides built-in support for managing configuration files and secrets, making it easier to manage the configuration of your applications.
-- *Resource management:* Kubernetes allows you to set resource limits and requests for your applications, ensuring that they have the resources they need to run properly.
 
-**Pods** : Pods are a fundamental building block in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way.They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
+- *Self-healing:* If any containers fail, kubernetes can automatically detect it and replace it with a fully functional container and make sure that the application is always available and running.
+
+
+- *Service discovery and load balancing:* Kubernetes provides a built-in service discovery mechanism which helps containers to find other containers running inside the cluster and communicate with each other, even as they are dynamically created and destroyed. So, everytime a new container comes up, we don't need to network the same with other containers but it by default gets networked. Kubernetes also have a built-in load balancing mechanism that can distribute traffic across multiple instances of your application. In next exercise we will be implementing load balancing on our app.
+
+
+- *Resource management:* Kubernetes allows you to set resource limits and requests for your applications, ensuring that the application have the resources to run efficiently. we will see the implementation of this in exercise 4 where we limit the cpu usage by 40%.
+
+**Pods** : Pods are the basic components in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way.They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
 
 Since, Kubernetes is a Container Orchestration platform so we need containers to go ahead with deploying an application on kubernetes. Here in our execise we will be using Docker container.
 
 
 
-In our cluster node-0 is the master node so we will log into node-0
+In our cluster node-0 is the master node so we will log into node-0.
 
-
-Next step is to get all the code into our remote host which will be used to deploy the application.
-
-To download the content of the app clone this repository "https://github.com/teaching-on-testbeds/k8s-ml" or run the following command in your terminal.
+To deploy an app on a kubernetes cluster we need a manifest file. We will download the manifest file by running the command:
 
 ``` shell
-$ git clone https://github.com/indianspeedster/ml_app_on_ks_pod.git
-$ cd ml_app_on_ks_pod
-```
-Now we have everything which we are going to need to deploy our app, the last thing we need to check is weather kubernetes and Docker is installed or not.
 
-To check kubernetese version :
-
-``` shell
-$ kubectl -v
-```
-To check Docker version :
-
-``` shell
-$ docker -v
-```
-
-In the repository you will see there is a file named *Dockerfile*, this file will be used to create a docker image which further will be pulled by kubernetes pods.
-
-to create a docker image run the following command in the shell also make sure that you are in the food_classification directory.
-
-``` shell
-$ docker build -t my-app:0.0.2 .
+wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_k8s/deployment_k8s.yaml
 
 ```
 
-Now Docker image is ready, we can check the same by running the following command:
+Next let's understand what is there in the deployment_k8s.yaml file.
 
-``` shell
-$ docker images
-
-```
-
-Next step is to push the docker image to the docker registry which is accessible from the kubernetes cluster.
-The docker resistry is on 10.10.1.1:5000
-
-First we will tag the image, run the command below to do the same:
-
-``` shell
-$ docker tag my-app:latest  10.10.1.1:5000/my-app:0.0.2
-```
-
-Next we will push the image to the registry:
-
-``` shell
-$ docker push 10.10.1.1:5000/my-app:0.0.2
-```
-
-To make things simple and easy all our deployments would be done through a manifest file deployment.yaml . 
-
-To check the content of deployment.yaml file, enter the following commands on your teminal:
-
-``` shell
-$ cat pod_deployment.yaml
-```
-
-compare the content of the file to make sure that you have loaded the correct file.
 
 ```Shell
-$ cat pod_deployment.yaml
+cat pod_deployment.yaml
+```
 
+The output will look like this:
+
+```shell 
 apiVersion: v1
 kind: Service
 metadata:
@@ -103,7 +58,6 @@ spec:
     targetPort: 5000
     nodePort: 32000
   type: NodePort
-
 
 ---
 apiVersion: apps/v1
@@ -122,17 +76,23 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: 10.10.1.1:5000/my-app:0.0.2
+        image: 10.10.1.1:5000/my-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
 
 ```
 
-The last and final step is to apply the content of the deployment.yaml file. run the command below to do so:
+Here, the manifest file defines a kubernetes service with name flask-test-service and a kubernetes deployment named flask-test-app.
+
+In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort  is the port of container and nodePort is the port of the three nodes. 
+
+In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, imagePullPolicy: Always means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry.
+
+The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
 
 ``` shell
-$ kubectl apply -f pod_deployment.yaml
+kubectl apply -f pod_deployment.yaml
 ```
 
 If the output looks similar to this
@@ -149,7 +109,7 @@ Since the content of our pod is large so it will take close to a minute for the 
 To check the status of pod run the below mentioned command:
 
 ``` shell
-$ kubectl get pods -o wide
+kubectl get pods -o wide
 ```
 
 if the status of pods shows as Running then it means the pod is healthy and is running.
@@ -157,11 +117,26 @@ if the status of pods shows as Running then it means the pod is healthy and is r
 Since our pod is running on the cluster via a service, we also need to check the status of the service. To check run the command:
 
 ``` shell
-$ kubectl get svc -o wide
+kubectl get svc -o wide
 ```
 
 In the output you will see the nodeport number, it is the same port number on which the app is running.
 
-Next go to your browser and run ip of any of the nodes colon node port, eg: 192.168.56.453:32000  and you will see that your ml app is up and running, try predicting and hae fun ...!
+Use the below mentioned command to know the ip of your node.
+
+``` shell
+curl ifconfig.me
+```
+
+Next go to your browser and run ip of any of the nodes colon node port, eg: 192.168.56.453:32000  and you will see that your ml app is up and running, try making predictions from the app.
+
+When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
+
+``` shell
+kubectl delete -f deployment_k8s.yaml
+
+```
+This exercise is complete.
+
 
 :::

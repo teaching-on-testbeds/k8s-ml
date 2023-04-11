@@ -19,108 +19,77 @@ Let's see a demo to verify that the response always comes from a different pod.
 
 ssh into node-0
 
+To deploy an app with a load balancer we will be needing a manifest file. To download the file run
+
+
+``` shell
+wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_lb/deployment_lb.yaml
+```
+
+Next let's understand what is there in the deployment_lb.yaml file.
+
 ```shell
-$ ssh cspandey@pc827.emulab.net
-
+cat deployment_lb.yaml
 ```
 
-create a directory load_balancing_demo
+The output will be as follow
 
 ``` shell
-$ mkdir load_balancing_demo
-$ cd load_balancing_demo
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-test-service
+spec:
+  selector:
+    app: flask-test-app
+  ports:
+  - protocol: "TCP"
+    port: 6000
+    targetPort: 5000
+    nodePort: 32000
+  type: LoadBalancer
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-test-app
+spec:
+  selector:
+    matchLabels:
+      app: flask-test-app
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: flask-test-app
+    spec:
+      containers:
+      - name: flask-test-app
+        image: 10.10.1.1/ml-app:0.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
 ```
 
-Get a sample deployment.yaml file that can be used to deploy a load balancer as service.
+Here, the manifest file defines a kubernetes service of type LoadBalancer with name flask-test-service and a kubernetes deployment named flask-test-app.
+
+In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort  is the port of container and nodePort is the port of the three nodes. 
+
+In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, imagePullPolicy: Always means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry, you can see replicas:5 which means that the deployment will create 5 replicas of the app and all will be served through the load balancer where the traffic will be divided equally.
+
+Next step is to deploy this app with a load balancer through the help of the manifest file deployment_lb.yaml.
 
 ``` shell
-$ wget https://github.com/indianspeedster/deploy_loadbalancer.yaml
-```
-
-Deploy load balancer as a service.
-
-``` shell
-$ kubectl apply -f deploy_loadbalancer.yaml
-
-```
-
-The command above will deploy 5 replicas of a simple flask app which return output as hello user from "pod_name". pod_name is the name of the pod from which the user is getting a response.
-
-got to your web browser and enter public ip of any of your node and port 32000, you will get a response.
-
-
-
-
-To see all the pods running you can run the command:
-
-``` shell
-$ kubectl get pods
-
-```
-You can match the pod_name with the pod from which you are getting response.
-
-Also, to check that at a specific time how much cpu memory a pod is using, run the command:
-
-``` shell
-
-$ kubectl top pods
-
-```
-
-So, Now we understood that how exactly load balancing work.
-
-Next step will be to deploy a ML app with a load balancer.
-
-The steps will be similar with what we did in exercise 2. the only difference is that now we will be using a seperate deployment.yaml file which will specify that we will be creating 5 different replicas of the same ml app on 5 seperate pods.
-
-Clone the repository that contains the the Flask ML app to your remote:
-
-``` shell
-$ git clone https://github.com/teaching-on-testbeds/k8s-ml-lb.git
-
-```
-get inside the repository:
-
-``` shell
-$ cd k8s-ml-lb
-```
-
-get your ml model from your local through scp and make sure that the model is named as ml-lb.h5
-
-Create a docker image for the ml-app by using the command.
-
-``` shell
-$ docker build -t --no-cache ml-app:latest .
-
-```
-
-Tag the docker image to push it to the local registry
-
-``` shell
-$ docker tag ml-app:latest  10.10.1.1:5000/ml-app:latest
-
-```
-
-Push the image to the registry:
-
-``` shell
-$ docker push 10.10.1.1:5000/ml-app:latest
-
-```
-
-The last task is to launch the scaled ML application by utilizing a load balancer that has a static scaling configuration of five pods.
-
-On your remote terminal run:
-
-``` shell
-$ kubectl apply -f deployment_lb.yaml
+kubectl apply -f deployment_lb.yaml
 
 ```
 
 To check if the deployment is running fine after 2 mins run 
 
 ``` shell
-$ kubectl get pods
+kubectl get pods
 
 ```
 
@@ -128,7 +97,12 @@ If the status of all pods says as "Running" this means that the pods are healthy
 
 open your browser and run ip:32000 (here ip is the public ip of any of your nodes) and you can see that your ml app is up and running try making predictions.
 
-**Testing Load balancing**
+When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
-*Content to be added*
+``` shell
+kubectl delete -f deployment_k8s.yaml
+
+```
+
+This exercise is complete here.
 :::
