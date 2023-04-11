@@ -45,7 +45,7 @@ For this exercise we will use a flask app to deploy the food classification mode
 To download the content of the app run the following command in your terminal.
 
 ``` shell
-wget https://github.com/teaching-on-testbeds/k8s-ml/tree/main/app
+git clone https://github.com/teaching-on-testbeds/k8s-ml.git
 ```
 
 The content of the repository contains everything but the model which you want to deploy so now we will transfer the model from your local host to remote host. Make sure that your model is named as "model.h5"
@@ -82,7 +82,7 @@ Docker version 19.03.15, build 99e3ed8919
 The next step is to get into app directory which contains flask app
 
 ``` shell
-cd app
+cd k8s-ml/app
 ```
 
 Before going ahead make sure that the folder structure is same as below
@@ -105,12 +105,12 @@ docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
 docker push 10.10.1.1:5000/my-app:0.0.1
 ```
 
-Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports
+Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
 
 For instance we let's run a docker container on port 32001
 
 ``` shell
-docker run -d -p 32001:5000 10.10.1.1:5000/my-app
+docker run -d -p 32001:5000 10.10.1.1:5000/my-app:0.0.1
 ```
 
 -   -d is for detach mode.
@@ -123,8 +123,16 @@ Try doing some predictions.
 Once you are done using the app, You can stop it by below mentioned command:
 
 ``` shell
-docker stop 10.10.1.1:5000/my-app
+docker stop <container_id>
 ```
+
+container_id can be obtained by running
+
+``` shell
+docker ps
+```
+
+There would be many container running but see the container 10.10.1.1:5000/my-app:0.0.1 it's i'd will be in the forst column.
 
 This exercise is complete here.
 
@@ -150,17 +158,17 @@ Since, Kubernetes is a Container Orchestration platform so we need containers to
 
 In our cluster node-0 is the master node so we will log into node-0.
 
-To deploy an app on a kubernetes cluster we need a manifest file. We will download the manifest file by running the command:
+To deploy an app on a kubernetes cluster we need a manifest file. We have the manifest in the folder deploy_k8s named as deployment_k8s.yaml , lets go to the folder :
 
 ``` shell
 
-wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_k8s/deployment_k8s.yaml
+cd ~/k8s-ml/deploy_k8s
 ```
 
 Next let's understand what is there in the deployment_k8s.yaml file.
 
 ``` shell
-cat pod_deployment.yaml
+cat deployment_k8s.yaml
 ```
 
 The output will look like this:
@@ -212,7 +220,7 @@ In the deployment flask-test-app you have a container which will pull the docker
 The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
 
 ``` shell
-kubectl apply -f pod_deployment.yaml
+kubectl apply -f deployment_k8s.yaml
 ```
 
 If the output looks similar to this
@@ -276,10 +284,10 @@ Let's see a demo to verify that the response always comes from a different pod.
 
 ssh into node-0
 
-To deploy an app with a load balancer we will be needing a manifest file. To download the file run
+To deploy an app with a load balancer we will be needing a manifest file. To file is already there in the folder deploy_lb named as deployment_lb.yaml.
 
 ``` shell
-wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_lb/deployment_lb.yaml
+cd ~/k8s-ml/deploy_k8s
 ```
 
 Next let's understand what is there in the deployment_lb.yaml file.
@@ -354,7 +362,7 @@ open your browser and run ip:32000 (here ip is the public ip of any of your node
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
 ``` shell
-kubectl delete -f deployment_k8s.yaml
+kubectl delete -f deployment_lb.yaml
 ```
 
 This exercise is complete here.
@@ -373,13 +381,13 @@ The flow chart below demonstrates the working of HPA.
 
 source: https://granulate.io/blog/kubernetes-autoscaling-the-hpa/
 
-To deploy an ML-App with Horizontal pod Auto scaller, We need to add a new resource in our manifest file of kind *HorizontalPodAutoscaler* and make some changes in resource section of deployment and set the limits and requests for cpu usage. Manifest file is already made for this exercise, so you don't need to worry much about that. To download the manifest file run the command:
+To deploy an ML-App with Horizontal pod Auto scaller, We need to add a new resource in our manifest file of kind *HorizontalPodAutoscaler* and make some changes in resource section of deployment and set the limits and requests for cpu usage. Manifest file is already made for this exercise, so you don't need to worry much about that. Manifest file is inside the folder deploy_hpa named as deployment_hpa.yaml :
 
 ``` shell
-wget https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_hpa/deployment_hpa.yaml
+cd ~/k8s-ml/deploy_hpa
 ```
 
-Understanding the manifest file:
+Let's understand this manifest file:
 
 Run this command to see the manifest file
 
