@@ -447,9 +447,9 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: "100m"
+            cpu: "1000m"
           requests:
-            cpu: "100m"
+            cpu: "1000m"
         ports:
         - containerPort: 5000
 ```
