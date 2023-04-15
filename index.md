@@ -51,7 +51,7 @@ git clone https://github.com/teaching-on-testbeds/k8s-ml.git
 The content of the repository contains everything but the model which you want to deploy so now we will transfer the model from your local host to remote host. Make sure that your model is named as "model.h5"
 
 ``` shell
-scp "path of saved model" "name of remote host":"/users/{username}/app/"
+scp "path of saved model" "name of remote host":"/users/{username}/k8s-ml/app/"
 ```
 
 After transfering the file again log in to node-0.
@@ -100,14 +100,14 @@ Next step is to create a docker image of our flask app and push it to the local 
 
 ``` shell
 
-docker build -t --no-cache my-app:0.0.1 .
+docker build --no-cache -t my-app:0.0.1 .
 docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
 docker push 10.10.1.1:5000/my-app:0.0.1
 ```
 
 Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
 
-For instance we let's run a docker container on port 32001
+For instance let's run a docker container on port 32001
 
 ``` shell
 docker run -d -p 32001:5000 10.10.1.1:5000/my-app:0.0.1
@@ -144,7 +144,7 @@ To rebuild the container follow the same step as you did above while building th
 
 ``` shell
 
-docker build -t --no-cache my-app:0.0.1 .
+docker build --no-cache -t my-app:0.0.1 .
 docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
 docker push 10.10.1.1:5000/my-app:0.0.1
 ```
@@ -465,10 +465,10 @@ spec:
         resources:
           requests:
             cpu: 1000m
-            memory: 1000Mi
+            
           limits:
             cpu: 1000m
-            memory: 1000Mi
+           
         ports:
         - containerPort: 5000
 ```
@@ -479,14 +479,14 @@ Here you can see that there are three kind of resources :
 
 -   Service :- This creates a service which is used to redirect tcp requests in between pods and nodes which also has a load balancer.
 
--   Deployment :- This creates a deployment of our flask app on a single pod with cpu limits to track the usage of cpu and make sure that the cpu limits and requests doesnot cross 100.
+-   Deployment :- This creates a deployment of our flask app on a single pod with cpu limits to track the usage of cpu and make sure that the cpu limits and requests doesnot cross 1000.
 
 Now we will use this manifest file to deploy our app.
 
 On your terminal run:
 
 ``` shell
-kubectl apply -f deployment_hs.yaml
+kubectl apply -f deployment_hpa.yaml
 ```
 
 Now our ml-app is deployed with horizontal scalling.
