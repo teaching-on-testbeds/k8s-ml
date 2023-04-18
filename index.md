@@ -135,7 +135,7 @@ The output will be similar to the image below:
 copy the CONTAINER ID of your container and run
 
 ``` shell
-docker stop CONTAINER ID<>
+docker stop CONTAINER ID
 ```
 
 Here for our experiment, you may need to change the classification model, once you change it you need to rebuild the conatiner to make sure that the changes are reflecting in container.
