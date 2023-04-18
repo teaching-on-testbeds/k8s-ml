@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block content %}
+
+
+	
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Flask App</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Attributes</th>
+            <th>Values</th>
+        </tr>
+        {% for key, value in result.items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td style="padding-left: 10px;"><b>{{ value }}</b></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
+{% endblock %}

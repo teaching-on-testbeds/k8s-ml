@@ -54,5 +54,11 @@ def upload():
     return "<h1> Sorry Cant make any preds </h1>"
 
 
+@app.route('/test', methods=['GET'])
+def test():
+    preds = model_predict("./instance/uploads/test_image.jpeg", model)
+    return str(preds)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
