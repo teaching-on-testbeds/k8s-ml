@@ -18,9 +18,6 @@ def index():
 
 @app.route('/siege-results/<ip>', methods=['GET'])
 def seigeResult(ip):
-    # shekhar Code
-    #siege_cmd = f"siege -c 10 -t 3s http://{ip}:32000/test"
-    #ip = "127.0.0.1"  # example IP address
     siege_cmd = "siege -c 10 -t 10s http://{0}:32000/test".format(ip)
 
 
