@@ -46,7 +46,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 32000
+    nodePort: 8000
   type: LoadBalancer
 
 
@@ -71,6 +71,13 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+        resources:
+          limits:
+            cpu: "8"
+            memory: "5Gi"
+          requests:
+            cpu: "5"
+            memory: "5Gi"
 ```
 
 Here, the manifest file defines a kubernetes service of type LoadBalancer with name flask-test-service and a kubernetes deployment named flask-test-app.

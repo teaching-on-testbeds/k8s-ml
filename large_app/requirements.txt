@@ -1,0 +1,6 @@
+Flask
+numpy
+tensorflow==2.12.0
+Pillow
+numpy
+pandas

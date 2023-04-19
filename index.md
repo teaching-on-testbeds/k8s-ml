@@ -1,12 +1,22 @@
-## Exercise : Reserve resources on Cloud-Lab
+## Exercise : Reserve resources on CloudLab
 
-To run an experiment on cloud-lab you need to follow the following steps:
+To run an experiment on cloud-lab you need to follow the following steps: - Reserve Nodes as per your working schedule.
 
--   Select a profile which is relevent to your experiment, here for our experiment we have to select k8s.
+-   Select a profile which is relevent to your experiment.
 
 -   Instantiate the profile and wait for the resources to come up.
 
 -   Log in to the resources and run your experiment.
+
+### Reserve nodes
+
+Before you start the experiment, make sure you plan that when exactly you are going to do the experiment. For this experiment we have to reserve servers which are very scarce on CloudLab, so plan everything accordingly, use the resources and when you are done release them so that it can be available for others to use.
+
+To reserve resources, click on **Experiments** at the top left corner of the CloudLab home page https://www.cloudlab.us/. From the dropdown select **Reserve Nodes** and then select all the options as given in the picture below:
+
+![Reserve Nodes](images/cloudlab-reservation.png)
+
+Make sure to enter dates as per your requirements, Next click on check which will check if resources are available and a dialogue box will appear, select yes and then click on submit. your reservation will be done.
 
 ### Open and Instantiate profile
 
@@ -14,25 +24,31 @@ For this experiment we will be using the following profile : https://www.cloudla
 
 Once you click on the link it will take to the landing page which would look similar to this and contains a brief description of the profile :
 
-![K8s Profile](images/profile.png)
+![K8s Profile](images/cloudlab-start-1.png)
 
 Click on Next and you will see a page similar to the image below. Here you have to select parameters for our experiment. You don't need to make any changes here since everything selected by default is enough for the present experiment. make sure that the parameters are same as shown in the image.
 
-![Parameterize](images/parameters.png)
+![Parameterize](images/cloudlab-start-2.png)
 
 click on Next and this will take to a Finalize section where we have to select the cluster. For our experiment use of any of the cluster is fine. Make sure to select the cluster which has resources available to use. To check the resources click on "Check Resource Availability".
 
-![Finalize](images/finalize.png)
+![Finalize](images/cloudlab-start-3.png)
 
 Click on Next in Finalize section and it will take to the Schedule section. Here select the number of hours you are going to use the profile. for our experiment 16 hours is enough and if needed extra it can be extened.
 
-![Schedule](images/schedule.png)
+![Schedule](images/cloudlab-start-4.png)
 
 Click Finish and the profile will start to intantiate, the process will take close to 30 mins and once done you will get a mail saying "Kubernetes Instance Setup Complete". This means that the resources are ready to use and you can login.
 
-Once the Process is complete the final page will look similar to this, where all three nodes have a tick on them as shown in the image below.
+Once the Process is complete the final page will look similar to this.
 
-![Profile ready](images/profile_ready.png)
+This is the Topology view where all three nodes have a tick on them as shown.
+
+![Profile ready](images/topology_view.png)
+
+Here we have the list view which also have the SSH login commands.
+
+![Profile ready](images/list_view.png)
 
 Since Kubernetes is based on the concept of master and worker node and here in our experiment node-0 and node-1 are master nodes you can login to any of them and start next exercises.
 
@@ -40,31 +56,40 @@ This exercise is done here.
 
 ## Exercise: Deploy an image classification app on cloud.
 
-For this exercise we will use a flask app to deploy the food classification model you build in lab 8.
+SSH into node-0 of your cluster and leave the terminal open.
 
-To download the content of the app run the following command in your terminal.
+For this exercise we will use a flask app to deploy the food classification model you built in https://colab.research.google.com/drive/16w-mLZ4tSxwH7bZof-1Baota-TIYv19B.
+
+To download the content of the flask app run the following command in your terminal.
 
 ``` shell
 git clone https://github.com/teaching-on-testbeds/k8s-ml.git
 ```
 
-The content of the repository contains everything but the model which you want to deploy so now we will transfer the model from your local host to remote host. Make sure that your model is named as "model.h5"
+The content of the repository contains everything but the model which you want to deploy. Go to the colab notebook, Train and test the model inside colab, save it by adding the below mentioned python code in the last cell of the notebook.
 
+<<<<<<< HEAD
+``` python
+model.save("model.h5")
+=======
 ``` shell
 scp "path of saved model" "name of remote host":"/users/{username}/k8s-ml/app/"
+>>>>>>> 05f16934cfee922bc5306c2df4d1bbeaaa3f7a6e
 ```
 
-After transfering the file again log in to node-0.
+then download the saved model from Colab (use the file brower on the side to locate and download the saved model).
 
-Now we are ready to run the flask app, before that you should check what is the public ip from which the content of the app can be accessed.
+Leave the SSH session running and open a new local terminal, change directory to the directory where your model is saved and run the below mentioned scp command to transfer the model to remote.
 
 ``` shell
-curl ifconfig.me
+scp model.h5 "name of remote host":/users/username/k8s-ml/app/
 ```
 
-The output of this command is the public ip of our remote host.
+The name of the remote host can be obtained by copying from the list view of cloudlab home page. it looks similar to "username@pc724.emulab.net" also remove username by your CloudLab username. Make sure to copy the name of the remote host as it's needed in the future exercises.
 
-We will be using Docker to containerise the ml-app. Learning Docker is a large process and that is not the part of this exercise. To make sure that you don't get stuck with docker, a Dockerfile is already provided in the app you downloaded.
+Once the file is transfered, open the ssh session at node-0
+
+Now we are ready to run the flask app, We will be using Docker to containerise the ml-app. Learning Docker is a large process and that is not the part of this exercise. To make sure that you don't get stuck with docker, a Dockerfile is already provided in the app you downloaded.
 
 Before we move ahead let's check if we have docker installed in our system.
 
@@ -100,23 +125,29 @@ Next step is to create a docker image of our flask app and push it to the local 
 
 ``` shell
 
+<<<<<<< HEAD
+docker build --no-cache -t ml-app:0.0.1 .
+docker tag ml-app:0.0.1  10.10.1.1:5000/ml-app:0.0.1
+docker push 10.10.1.1:5000/ml-app:0.0.1
+=======
 docker build --no-cache -t my-app:0.0.1 .
 docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
 docker push 10.10.1.1:5000/my-app:0.0.1
+>>>>>>> 05f16934cfee922bc5306c2df4d1bbeaaa3f7a6e
 ```
 
-Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
+The command above will build a docker image named ml-app whose version is 0.0.1 and the push it to a local registry running at 10.10.1.1:5000. Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
 
 For instance let's run a docker container on port 32001
 
 ``` shell
-docker run -d -p 32001:5000 10.10.1.1:5000/my-app:0.0.1
+docker run -d -p 32001:5000 10.10.1.1:5000/ml-app:0.0.1
 ```
 
 -   -d is for detach mode.
 -   -p is to assign the port host_port:container_port.
 
-Get the public ip of your host, go to your browser and run {public_ip}:32001, you will see that your app is up and running there.
+Open your browser and enter "name of the remote host":32001 which can be similar to "username@pc724.emulab.net:32001", you will see that your app is up and running there.
 
 Try doing some predictions.
 
@@ -128,14 +159,25 @@ First you need to get CONTAINER ID, it can be obtained by running
 docker ps
 ```
 
-The output will be similar to the image below:
-
-![docker_ps_output](images/docker_ps.png)
-
-copy the CONTAINER ID of your container and run
+The output will be similar to :
 
 ``` shell
+CONTAINER ID        IMAGE                         COMMAND                  CREATED             STATUS              PORTS                      NAMES
+86c2a79287be        10.10.1.1:5000/ml-app:0.0.1   "python app.py"          10 hours ago        Up 10 hours         0.0.0.0:32001->5000/tcp     gracious_lederberg
+9447cbb6496f        38f903b54010                  "kube-scheduler --au…"   16 hours ago        Up 16 hours                                    k8s_kube-scheduler_kube-scheduler-node-0_kube-system_b4fe9dc90ea45aa3cd69106e8d5a65d1_1
+569805b52f8a        registry:2                    "/entrypoint.sh /etc…"   21 hours ago        Up 21 hours         10.10.1.1:5000->5000/tcp   local-registry
+527b611e2ea3        quay.io/metallb/speaker       "/speaker --port=747…"   21 hours ago        Up 21 hours                                    k8s_speaker_speaker-m8622_metallb-system_9ef6d1ab-8732-43ae-a98c-df7bd134ad57_0
+2ca68ecfde5f        k8s.gcr.io/pause:3.3          "/pause"                 21 hours ago        Up 21 hours                                    k8s_POD_speaker-m86
+```
+
+Copy the CONTAINER ID, like for the case above, the id will be "86c2a79287be", and the run the command:
+
+``` shell
+<<<<<<< HEAD
+docker stop 86c2a79287be
+=======
 docker stop CONTAINER ID
+>>>>>>> 05f16934cfee922bc5306c2df4d1bbeaaa3f7a6e
 ```
 
 Here for our experiment, you may need to change the classification model, once you change it you need to rebuild the conatiner to make sure that the changes are reflecting in container.
@@ -144,9 +186,15 @@ To rebuild the container follow the same step as you did above while building th
 
 ``` shell
 
+<<<<<<< HEAD
+docker build --no-cache -t ml-app:0.0.1 .
+docker tag ml-app:0.0.1  10.10.1.1:5000/ml-app:0.0.1
+docker push 10.10.1.1:5000/ml-app:0.0.1
+=======
 docker build --no-cache -t my-app:0.0.1 .
 docker tag my-app:0.0.1  10.10.1.1:5000/my-app:0.0.1
 docker push 10.10.1.1:5000/my-app:0.0.1
+>>>>>>> 05f16934cfee922bc5306c2df4d1bbeaaa3f7a6e
 ```
 
 In future exercises too you need to follow the same process to rebuild a container.
@@ -202,7 +250,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 32000
+    nodePort: 8000
   type: NodePort
 
 ---
@@ -222,10 +270,17 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: 10.10.1.1:5000/my-app:0.0.1
+        image: 10.10.1.1:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+        resources:
+          limits:
+            cpu: "8"
+            memory: "5Gi"
+          requests:
+            cpu: "5"
+            memory: "5Gi"
 ```
 
 Here, the manifest file defines a kubernetes service with name flask-test-service and a kubernetes deployment named flask-test-app.
@@ -257,6 +312,16 @@ To check the status of pod run the below mentioned command:
 kubectl get pods -o wide
 ```
 
+The output will look similar to
+
+``` shell
+NAME                                               READY   STATUS              RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+flask-test-app-7b4c8648c6-r8zvv                    0/1     ContainerCreating   0          22s     <none>        node-2   <none>           <none>
+nfs-subdir-external-provisioner-7567fc7fcf-6qkcj   1/1     Running             0          3d21h   192.168.5.4   node-2   <none>           <none>
+```
+
+Here the status of the pod shows ContainerCreating which means the container is getting ready.
+
 if the status of pods shows as Running then it means the pod is healthy and is running.
 
 Since our pod is running on the cluster via a service, we also need to check the status of the service. To check run the command:
@@ -265,21 +330,32 @@ Since our pod is running on the cluster via a service, we also need to check the
 kubectl get svc -o wide
 ```
 
-In the output you will see the nodeport number, it is the same port number on which the app is running.
-
-Use the below mentioned command to know the ip of your node.
+The output will look similar to
 
 ``` shell
-curl ifconfig.me
+NAME                 TYPE        CLUSTER-IP        EXTERNAL-IP   PORT(S)         AGE     SELECTOR
+flask-test-service   NodePort    192.168.153.237   <none>        6000:8000/TCP   2m20s   app=flask-test-app
+kubernetes           ClusterIP   192.168.128.1     <none>        443/TCP         3d21h   <none>
 ```
 
-Next go to your browser and run ip of any of the nodes colon node port, eg: 192.168.56.453:32000 and you will see that your ml app is up and running, try making predictions from the app.
+The port shows as 6000:8000/TCP which means the service is running inside the cluster on port 6000 and is binded to port 8000 of our nodes.
+
+Next open your browser and enter "name of the remote host":32001 which can be similar to "username@pc724.emulab.net:32001", you will see that your app is up and running there.
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
 ``` shell
 kubectl delete -f deployment_k8s.yaml
 ```
+
+if the output looks similar to
+
+``` shell
+service "flask-test-service" deleted
+deployment.apps "flask-test-app" deleted
+```
+
+The deployment is deleted.
 
 This exercise is complete.
 
@@ -327,7 +403,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 32000
+    nodePort: 8000
   type: LoadBalancer
 
 
@@ -352,6 +428,13 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+        resources:
+          limits:
+            cpu: "8"
+            memory: "5Gi"
+          requests:
+            cpu: "5"
+            memory: "5Gi"
 ```
 
 Here, the manifest file defines a kubernetes service of type LoadBalancer with name flask-test-service and a kubernetes deployment named flask-test-app.
@@ -439,7 +522,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 32000
+    nodePort: 8000
   type: LoadBalancer
 ---
 
@@ -460,8 +543,10 @@ spec:
     spec:
       containers:
       - name: ml-app-hpa
-        image: 10.10.1.1:5000/my-app:0.0.1
+        image: 10.10.1.1:5000/ml-app:0.0.1
         imagePullPolicy: Always
+<<<<<<< HEAD
+=======
         resources:
           requests:
             cpu: 1000m
@@ -469,8 +554,16 @@ spec:
           limits:
             cpu: 1000m
            
+>>>>>>> 05f16934cfee922bc5306c2df4d1bbeaaa3f7a6e
         ports:
         - containerPort: 5000
+        resources:
+          limits:
+            cpu: "8"
+            memory: "5Gi"
+          requests:
+            cpu: "5"
+            memory: "5Gi"
 ```
 
 Here you can see that there are three kind of resources :

@@ -22,7 +22,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 32000
+    nodePort: 8000
   type: LoadBalancer
 ---
 
@@ -43,14 +43,14 @@ spec:
     spec:
       containers:
       - name: ml-app-hpa
-        image: 10.10.1.1:5000/my-app:0.0.1
+        image: 10.10.1.1:5000/ml-app:0.0.1
         imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: 1000m
-            memory: 1000Mi
-          limits:
-            cpu: 1000m
-            memory: 1000Mi
         ports:
         - containerPort: 5000
+        resources:
+          limits:
+            cpu: "8"
+            memory: "5Gi"
+          requests:
+            cpu: "5"
+            memory: "5Gi"

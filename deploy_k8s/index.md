@@ -57,7 +57,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 32000
+    nodePort: 8000
   type: NodePort
 
 ---
@@ -77,10 +77,17 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: 10.10.1.1:5000/my-app:0.0.1
+        image: 10.10.1.1:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+        resources:
+          limits:
+            cpu: "8"
+            memory: "5Gi"
+          requests:
+            cpu: "5"
+            memory: "5Gi"
 
 ```
 
@@ -112,7 +119,17 @@ To check the status of pod run the below mentioned command:
 
 ``` shell
 kubectl get pods -o wide
+
 ```
+The output will look similar to
+
+``` shell
+NAME                                               READY   STATUS              RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+flask-test-app-7b4c8648c6-r8zvv                    0/1     ContainerCreating   0          22s     <none>        node-2   <none>           <none>
+nfs-subdir-external-provisioner-7567fc7fcf-6qkcj   1/1     Running             0          3d21h   192.168.5.4   node-2   <none>           <none>
+
+```
+Here the status of the pod shows ContainerCreating which means the container is getting ready.
 
 if the status of pods shows as Running then it means the pod is healthy and is running.
 
@@ -121,16 +138,17 @@ Since our pod is running on the cluster via a service, we also need to check the
 ``` shell
 kubectl get svc -o wide
 ```
+The output will look similar to 
 
-In the output you will see the nodeport number, it is the same port number on which the app is running.
-
-Use the below mentioned command to know the ip of your node.
-
-``` shell
-curl ifconfig.me
+```shell
+NAME                 TYPE        CLUSTER-IP        EXTERNAL-IP   PORT(S)         AGE     SELECTOR
+flask-test-service   NodePort    192.168.153.237   <none>        6000:8000/TCP   2m20s   app=flask-test-app
+kubernetes           ClusterIP   192.168.128.1     <none>        443/TCP         3d21h   <none>
 ```
+The port shows as 6000:8000/TCP which means the service is running inside the cluster on port 6000 and is binded to port 8000 of our nodes.
 
-Next go to your browser and run ip of any of the nodes colon node port, eg: 192.168.56.453:32000  and you will see that your ml app is up and running, try making predictions from the app.
+
+Next open your browser and enter "name of the remote host":32001 which can be similar to "username@pc724.emulab.net:32001", you will see that your app is up and running there.
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
@@ -138,6 +156,14 @@ When you are done with your experiment, make sure to delete the deployment and s
 kubectl delete -f deployment_k8s.yaml
 
 ```
+if the output looks similar to 
+
+```shell
+service "flask-test-service" deleted
+deployment.apps "flask-test-app" deleted
+```
+The deployment is deleted.
+
 This exercise is complete.
 
 
