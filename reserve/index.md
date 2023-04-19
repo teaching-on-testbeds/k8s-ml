@@ -1,5 +1,5 @@
 
-## Exercise : Reserve resources on CloudLab
+## Exercise : Start an experiment on CloudLab
 
 Before you run an experiment on CloudLab, you will:
 
