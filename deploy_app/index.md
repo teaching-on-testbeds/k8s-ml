@@ -88,6 +88,23 @@ Open your browser and enter "name of the remote host":32001 which can be similar
 
 Try doing some predictions.
 
+To test the load on the deployment we will use siege. Siege is a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
+
+Install siege in your system
+
+```shell
+sudo apt-get install siege
+
+```
+and then run 
+
+``` shell
+siege -c 10 -t 120s http://{enter the url on which the app is running}/test
+
+```
+Here Siege will generate traffic to your website for 120 seconds with a concurrency level of 10 users.
+
+
 Once you are done using the container, You can stop it by following the steps mentioned:
 
 First you need to get CONTAINER ID, it can be obtained by running
