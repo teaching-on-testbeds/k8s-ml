@@ -63,10 +63,6 @@ def test():
     preds = model_predict("./instance/uploads/test_image.jpeg", model)
     return str(preds)
 
-@app.route('/test', methods=['GET'])
-def test():
-    preds = model_predict("./instance/uploads/test_image.jpeg", model)
-    return str(preds)
 
 
 if __name__ == '__main__':
