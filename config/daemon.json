@@ -1,0 +1,4 @@
+{
+    "insecure-registries": ["node1:5000"]
+}
+
