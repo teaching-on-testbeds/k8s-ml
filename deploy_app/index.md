@@ -1,6 +1,6 @@
 ## Exercise: Deploy an image classification app on cloud.
 
-SSH into node-0 of your cluster and leave the terminal open.
+SSH into node1 of your cluster and leave the terminal open.
 
 For this exercise we will use a flask app to deploy the food classification model you built in https://colab.research.google.com/drive/16w-mLZ4tSxwH7bZof-1Baota-TIYv19B.
 
@@ -68,23 +68,23 @@ Next step is to create a docker image of our flask app and push it to the local 
 ``` shell
 
 docker build --no-cache -t ml-app:0.0.1 .
-docker tag ml-app:0.0.1  10.10.1.1:5000/ml-app:0.0.1
-docker push 10.10.1.1:5000/ml-app:0.0.1
+docker tag ml-app:0.0.1  node1:5000/ml-app:0.0.1
+docker push node1:5000/ml-app:0.0.1
 ```
 
-The command above will build a docker image named ml-app whose version is 0.0.1 and the push it to a local registry running at 10.10.1.1:5000.
+The command above will build a docker image named ml-app whose version is 0.0.1 and the push it to a local registry running at node1:5000.
 Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
 
 For instance we let's run a docker container on port 32001
 
 ``` shell
-docker run -d -p 32001:5000 10.10.1.1:5000/ml-app:0.0.1
+docker run -d -p 32000:5000 node1:5000/ml-app:0.0.1
 ```
 
 -   -d is for detach mode.
 -   -p is to assign the port host_port:container_port.
 
-Open your browser and enter "name of the remote host":32001 which can be similar to "username@pc724.emulab.net:32001", you will see that your app is up and running there.
+Open your browser and enter "name of the remote host":32000 which can be similar to "username@pc724.emulab.net:32000", you will see that your app is up and running there.
 
 Try doing some predictions.
 
@@ -138,7 +138,7 @@ To rebuild the container follow the same step as you did above while building th
 ``` shell
 
 docker build --no-cache -t ml-app:0.0.1 .
-docker tag ml-app:0.0.1  10.10.1.1:5000/ml-app:0.0.1
+docker tag ml-app:0.0.1  node1:5000/ml-app:0.0.1
 docker push 10.10.1.1:5000/ml-app:0.0.1
 ```
 

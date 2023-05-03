@@ -15,9 +15,6 @@ The diagram below shows how exactly traffic flows in a load balancer.
 
 The core idea is that you have multiple pods running and the traffic is always redirected to the pod which is not busy and is least utilized.
 
-Let's see a demo to verify that the response always comes from a different pod.
-
-ssh into node-0
 
 To deploy an app with a load balancer we will be needing a manifest file. To file is already there in the folder deploy_lb named as deployment_lb.yaml.
 
@@ -46,7 +43,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 8000
+    nodePort: 32000
   type: LoadBalancer
 
 
@@ -67,7 +64,7 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: 10.10.1.1:5000/my-app:0.0.1
+        image: node1:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000

@@ -55,7 +55,7 @@ def upload():
         preds = model_predict("./instance/uploads/" + f.filename, model)
         end_time = time.time()
         elapsed_time =  end_time - start_time
-        return str(preds) + f", Inference Time : {elapsed_time}"
+        return str(preds) + ", Inference Time : {:.4f} seconds".format(elapsed_time)
     return "<h1> Sorry Cant make any preds </h1>"
 
 @app.route('/test', methods=['GET'])
@@ -66,4 +66,4 @@ def test():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

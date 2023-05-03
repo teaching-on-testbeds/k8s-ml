@@ -1,5 +1,3 @@
-::: {.cell .markdown}
-
 ## Exercise 3: Scaling a ML-app (Part-2)
 
 In last exercise we used Load balancing to distribute incoming traffic across multiple instances of a particular application running on 5 different pods. The benefit was that in case we have heavy traffic the traffic can be distributed evenly and our service won't be affect. But what if there is a time when the traffic goes down and it can be easily handeled with one pod. in that case the other pods won't be used and the existing resources are not getting used efficiently. To fix this issue we use Horizontal scalling.
@@ -58,7 +56,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 8000
+    nodePort: 32000
   type: LoadBalancer
 ---
 
@@ -79,7 +77,7 @@ spec:
     spec:
       containers:
       - name: ml-app-hpa
-        image: 10.10.1.1:5000/ml-app:0.0.1
+        image: node1:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -131,8 +129,6 @@ Once you complete this exercise make sure to delete the deployment and services 
 kubectl delete -f deployment_hpa.yaml
 
 ```
-
-
 
 This exercise is done here.
 

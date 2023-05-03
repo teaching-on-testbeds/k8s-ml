@@ -1,4 +1,3 @@
-::: {.cell .markdown}
 
 ## Exercise 2: Deploy an image classification App on a kubernetes Pod.
 
@@ -25,7 +24,7 @@ Since, Kubernetes is a Container Orchestration platform so we need containers to
 
 
 
-In our cluster node-0 is the master node so we will log into node-0.
+In our cluster node-1 is the master node so we will log into node-1.
 
 To deploy an app on a kubernetes cluster we need a manifest file. We have the manifest in the folder deploy_k8s named as deployment_k8s.yaml , lets go to the folder :
 
@@ -57,7 +56,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 8000
+    nodePort: 32000
   type: NodePort
 
 ---
@@ -77,7 +76,7 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: 10.10.1.1:5000/ml-app:0.0.1
+        image: node1:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -142,13 +141,13 @@ The output will look similar to
 
 ```shell
 NAME                 TYPE        CLUSTER-IP        EXTERNAL-IP   PORT(S)         AGE     SELECTOR
-flask-test-service   NodePort    192.168.153.237   <none>        6000:8000/TCP   2m20s   app=flask-test-app
+flask-test-service   NodePort    192.168.153.237   <none>        6000:32000/TCP   2m20s   app=flask-test-app
 kubernetes           ClusterIP   192.168.128.1     <none>        443/TCP         3d21h   <none>
 ```
-The port shows as 6000:8000/TCP which means the service is running inside the cluster on port 6000 and is binded to port 8000 of our nodes.
+The port shows as 6000:32000/TCP which means the service is running inside the cluster on port 6000 and is binded to port 32000 of our nodes.
 
 
-Next open your browser and enter "name of the remote host":32001 which can be similar to "username@pc724.emulab.net:32001", you will see that your app is up and running there.
+Next open your browser and enter floating_ip of any of the node:32000 which can be similar to 192.5.86.230:32000, you will see that your app is up and running there.
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
