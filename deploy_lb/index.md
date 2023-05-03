@@ -1,5 +1,3 @@
-::: {.cell .markdown}
-
 ## Exercise 3: Scaling a ML-app (Part-1)
 
 Last exercise, we deployed a ML app on kubernetes pod, and we saw that the app was working fine, but what will happen if a lot of traffic comes to the app? The single web service soon becomes overwhelmed, causing slow response times and even downtime. To fix this problem what we can do is create multiple pods and evenly distribute the traffic on each of the pod and this process of evenly distributing traffic on the pods is known as **Load balancing**.
@@ -10,7 +8,7 @@ Load balancing in a Kubernetes cluster involves distributing incoming network tr
 
 The diagram below shows how exactly traffic flows in a load balancer.
 
-![Load_balancer](images/load_balancer.png)
+![Load_balancer](/images/load_balancer.png)
 
 
 The core idea is that you have multiple pods running and the traffic is always redirected to the pod which is not busy and is least utilized.
@@ -101,6 +99,13 @@ If the status of all pods says as "Running" this means that the pods are healthy
 
 open your browser and run ip:32000 (here ip is the public ip of any of your nodes) and you can see that your ml app is up and running try making predictions.
 
+and then to stress test run the below mentioned command: 
+
+``` shell
+siege -c 10 -t 120s http://{enter the url on which the app is running}/test
+
+```
+
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
 ``` shell
@@ -109,4 +114,3 @@ kubectl delete -f deployment_lb.yaml
 ```
 
 This exercise is complete here.
-:::

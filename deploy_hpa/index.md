@@ -8,7 +8,7 @@ Here in our exercise we will be using a widely used horizontal scalling mechanis
 
 The flow chart below demonstrates the working of HPA.
 
-![Horizontal Pod Autoscaller](images/HPA.png)
+![Horizontal Pod Autoscaller](/images/HPA.png)
 
 source: https://granulate.io/blog/kubernetes-autoscaling-the-hpa/
 
@@ -110,7 +110,7 @@ kubectl apply -f deployment_hs.yaml
 
 Now our ml-app is deployed with horizontal scalling.
 
-To check the healt of pods run 
+To check the health of pods run 
 
 ```shell
 kubectl get pods
@@ -121,6 +121,13 @@ if the status shows as running, the pods are healthy.
 
 Initially you will see that there is only one pod running, but with time when the traffic increases the pods will scale up and when the traffic goes down the pods will scale down.
 
+
+and then to stress test run the below mentioned command: 
+
+``` shell
+siege -c 10 -t 120s http://{enter the url on which the app is running}/test
+
+```
 
 Once you complete this exercise make sure to delete the deployment and services running. To delete, run the following command:
 

@@ -149,6 +149,9 @@ The port shows as 6000:32000/TCP which means the service is running inside the c
 
 Next open your browser and enter floating_ip of any of the node:32000 which can be similar to 192.5.86.230:32000, you will see that your app is up and running there.
 
+
+
+
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
 ``` shell
