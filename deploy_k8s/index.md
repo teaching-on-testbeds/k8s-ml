@@ -169,4 +169,3 @@ The deployment is deleted.
 This exercise is complete.
 
 
-:::
