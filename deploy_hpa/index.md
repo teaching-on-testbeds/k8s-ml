@@ -43,7 +43,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: ml-app-hpa
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 40
 ---
 apiVersion: v1
 kind: Service
