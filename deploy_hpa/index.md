@@ -139,4 +139,4 @@ kubectl delete -f deployment_hpa.yaml
 
 This exercise is done here.
 
-:::
+
