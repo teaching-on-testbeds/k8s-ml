@@ -84,7 +84,7 @@ spec:
         resources:
           limits:
             cpu: "8"
-            memory: "5Gi"
+            memory: "8Gi"
           requests:
             cpu: "5"
             memory: "5Gi"
@@ -97,7 +97,7 @@ Here you can see that there are three kind of resources :
 
 - Service :- This creates a service which is used to redirect tcp requests in between pods and nodes which also has a load balancer.
 
-- Deployment :- This creates a deployment of our flask app on a single pod with cpu limits to track the usage of cpu and make sure that the cpu limits and requests doesnot cross 100.
+- Deployment :- This creates a deployment of our flask app on a single pod with minimum resource requests of cpu:"5", memory:"5Gi" and maximum extension of resources to cpu:"8", memory:"8Gi".
 
 Now we will use this manifest file to deploy our app.
 
