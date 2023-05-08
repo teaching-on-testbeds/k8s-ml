@@ -75,7 +75,7 @@ docker push node1:5000/ml-app:0.0.1
 The command above will build a docker image named ml-app whose version is 0.0.1 and the push it to a local registry running at node1:5000.
 Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
 
-For instance we let's run a docker container on port 32001
+For instance we let's run a docker container on port 32000
 
 ``` shell
 docker run -d -p 32000:5000 node1:5000/ml-app:0.0.1
@@ -139,7 +139,7 @@ To rebuild the container follow the same step as you did above while building th
 
 docker build --no-cache -t ml-app:0.0.1 .
 docker tag ml-app:0.0.1  node1:5000/ml-app:0.0.1
-docker push 10.10.1.1:5000/ml-app:0.0.1
+docker push node1:5000/ml-app:0.0.1
 ```
 
 In future exercises too you need to follow the same process to rebuild a container.
