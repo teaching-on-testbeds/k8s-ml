@@ -1,6 +1,6 @@
 ## Exercise: Deploy an image classification app on cloud.
 
-SSH into node1 of your cluster and leave the terminal open.
+SSH into Master node (node-0 for CloudLab and node1 for Chameleon) of your cluster and leave the terminal open.
 
 For this exercise we will use a flask app to deploy the food classification model you built in https://colab.research.google.com/drive/16w-mLZ4tSxwH7bZof-1Baota-TIYv19B.
 
@@ -63,7 +63,7 @@ Before going ahead make sure that the folder structure is same as below
     -   requirements.txt
     -   model.h5
 
-Next step is to create a docker image of our flask app and push it to the local registry running at 10.10.1.1:5000
+Next step is to create a docker image of our flask app and push it to the local registry running at node1:5000
 
 ``` shell
 
