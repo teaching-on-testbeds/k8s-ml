@@ -125,11 +125,15 @@ Initially you will see that there is only one pod running, but with time when th
 and then to stress test run the below mentioned command: 
 
 ``` shell
-siege -c 10 -t 120s http://{enter the url on which the app is running}/test
+echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip):32000/test
 
 ```
+copy the output of the command and paste them into your web browser.
 
-Once you complete this exercise make sure to delete the deployment and services running. To delete, run the following command:
+Once you complete this exercise make sure to delete the deployment and services running. 
+
+
+To delete the deployment, run the following command:
 
 ```shell
 
