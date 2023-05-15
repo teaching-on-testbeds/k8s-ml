@@ -19,15 +19,23 @@ model.save("model.h5")
 ```
 then download the saved model from Colab (use the file brower on the side to locate and download the saved model).
 
-Leave the SSH session running and open a new local terminal, change directory to the directory where your model is saved and run the below mentioned scp command to transfer the model to remote.
+Run the below mentioned command 
 
 ``` shell
-scp model.h5 "name of remote host":/users/username/k8s-ml/app/
+echo scp model.h5 $(curl -s ipinfo.io/ip):~/k8s-ml/app
 
 ```
 
-The name of the remote host can be obtained by copying from the list view of cloudlab home page.
-it looks similar to "username@pc724.emulab.net" also remove username by your CloudLab username. Make sure to copy the name of the remote host as it's needed in the future exercises.
+Copy the output of the command and eave the SSH session running and open a new local terminal, change directory to the directory where your model is saved and paste the command you copied and hit enter.
+if the output looks like this:
+
+``` shell
+model.h5                                                                                                                  100%  155MB   8.9MB/s   00:17
+```
+Your model is transfered from your local to remote.
+
+if you get a "Permission denied (publickey)." error, make sure to add "-i ~/.ssh/id_rsa_chameleon" after scp.
+
 
 Once the file is transfered, open the ssh session at node-0
 
@@ -68,8 +76,8 @@ Next step is to create a docker image of our flask app and push it to the local 
 ``` shell
 
 docker build --no-cache -t ml-app:0.0.1 .
-docker tag ml-app:0.0.1  node1:5000/ml-app:0.0.1
-docker push node1:5000/ml-app:0.0.1
+docker tag ml-app:0.0.1  node-0:5000/ml-app:0.0.1
+docker push node-0:5000/ml-app:0.0.1
 ```
 
 The command above will build a docker image named ml-app whose version is 0.0.1 and the push it to a local registry running at node1:5000.
@@ -78,7 +86,7 @@ Now our docker image is built and is available to use, we can use it any number 
 For instance we let's run a docker container on port 32000
 
 ``` shell
-docker run -d -p 32000:5000 node1:5000/ml-app:0.0.1
+docker run -d -p 32000:5000 node-0:5000/ml-app:0.0.1
 ```
 
 -   -d is for detach mode.
@@ -99,35 +107,19 @@ sudo apt-get install siege
 and then run 
 
 ``` shell
-siege -c 10 -t 120s http://{enter the url on which the app is running}/test
+echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip)/test
 
 ```
+copy the output of the command and paste them into your web browser.
+
 Here Siege will generate traffic to your website for 120 seconds with a concurrency level of 10 users.
 
 
-Once you are done using the container, You can stop it by following the steps mentioned:
+Once you are done using the container, You can stop it by running the below mentioned command:
 
-First you need to get CONTAINER ID, it can be obtained by running
-
-``` shell
-docker ps
-
-```
-
-The output will be similar to :
-
-```shell
-CONTAINER ID        IMAGE                         COMMAND                  CREATED             STATUS              PORTS                      NAMES
-86c2a79287be        10.10.1.1:5000/ml-app:0.0.1   "python app.py"          10 hours ago        Up 10 hours         0.0.0.0:32001->5000/tcp     gracious_lederberg
-9447cbb6496f        38f903b54010                  "kube-scheduler --au…"   16 hours ago        Up 16 hours                                    k8s_kube-scheduler_kube-scheduler-node-0_kube-system_b4fe9dc90ea45aa3cd69106e8d5a65d1_1
-569805b52f8a        registry:2                    "/entrypoint.sh /etc…"   21 hours ago        Up 21 hours         10.10.1.1:5000->5000/tcp   local-registry
-527b611e2ea3        quay.io/metallb/speaker       "/speaker --port=747…"   21 hours ago        Up 21 hours                                    k8s_speaker_speaker-m8622_metallb-system_9ef6d1ab-8732-43ae-a98c-df7bd134ad57_0
-2ca68ecfde5f        k8s.gcr.io/pause:3.3          "/pause"                 21 hours ago        Up 21 hours                                    k8s_POD_speaker-m86
-```
-Copy the CONTAINER ID, like for the case above, the id will be "86c2a79287be", and the run the command:
 
 ``` shell
-docker stop 86c2a79287be
+docker stop $(docker ps -q -f ancestor=ml-app:0.0.1)
 
 ```
 
@@ -138,8 +130,8 @@ To rebuild the container follow the same step as you did above while building th
 ``` shell
 
 docker build --no-cache -t ml-app:0.0.1 .
-docker tag ml-app:0.0.1  node1:5000/ml-app:0.0.1
-docker push node1:5000/ml-app:0.0.1
+docker tag ml-app:0.0.1  node-0:5000/ml-app:0.0.1
+docker push node-0:5000/ml-app:0.0.1
 ```
 
 In future exercises too you need to follow the same process to rebuild a container.
