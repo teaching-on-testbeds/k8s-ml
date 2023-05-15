@@ -76,7 +76,7 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: node1:5000/ml-app:0.0.1
+        image: node-0:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -94,7 +94,7 @@ Here, the manifest file defines a kubernetes service with name flask-test-servic
 
 In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort  is the port of container and nodePort is the port of the three nodes. 
 
-In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, "imagePullPolicy: Always" means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry.
+In the deployment flask-test-app you have a container which will pull the docker image node-0:5000/my-app:0.0.1 from the local registry, "imagePullPolicy: Always" means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry.
 
 The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
 
@@ -146,10 +146,13 @@ kubernetes           ClusterIP   192.168.128.1     <none>        443/TCP        
 ```
 The port shows as 6000:32000/TCP which means the service is running inside the cluster on port 6000 and is binded to port 32000 of our nodes.
 
+Run the below mentioned command in the same terminal:
 
-Next open your browser and enter floating_ip of any of the node:32000 which can be similar to 192.5.86.230:32000, you will see that your app is up and running there.
+``` shell
+echo http://$(curl -s ipinfo.io/ip):32000
+```
 
-
+copy the output of the previous command, open your browser and paste the same, you will see that your app is up and running there.
 
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
