@@ -92,7 +92,13 @@ docker run -d -p 32000:5000 node-0:5000/ml-app:0.0.1
 -   -d is for detach mode.
 -   -p is to assign the port host_port:container_port.
 
-Open your browser and enter "name of the remote host":32000 which can be similar to "username@pc724.emulab.net:32000", you will see that your app is up and running there.
+Run the below mentioned command in the same terminal:
+
+``` shell
+echo http://$(curl -s ipinfo.io/ip):32000
+```
+
+copy the output of the previous command, open your browser and paste the same, you will see that your app is up and running there.
 
 Try doing some predictions.
 
@@ -107,7 +113,7 @@ sudo apt-get install siege
 and then run 
 
 ``` shell
-echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip)/test
+echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip):32000/test
 
 ```
 copy the output of the command and paste them into your web browser.
