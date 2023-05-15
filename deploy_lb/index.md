@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
       - name: flask-test-app
-        image: node1:5000/ml-app:0.0.1
+        image: node-0:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -97,14 +97,21 @@ kubectl get pods
 
 If the status of all pods says as "Running" this means that the pods are healthy and running fine.
 
-open your browser and run ip:32000 (here ip is the public ip of any of your nodes) and you can see that your ml app is up and running try making predictions.
-
-and then to stress test run the below mentioned command: 
+Run the below mentioned command in the same terminal:
 
 ``` shell
-siege -c 10 -t 120s http://{enter the url on which the app is running}/test
+echo http://$(curl -s ipinfo.io/ip):32000
+```
+
+copy the output of the previous command, open your browser and paste the same, you will see that your app is up and running there.
+
+and then to stress test your deployment run : 
+
+``` shell
+echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip):32000/test
 
 ```
+copy the output of the command and paste them into your web browser.
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
