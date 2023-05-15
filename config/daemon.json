@@ -1,4 +1,4 @@
 {
-    "insecure-registries": ["node1:5000"]
+    "insecure-registries": ["node-0:5000"]
 }
 
