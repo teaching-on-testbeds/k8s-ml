@@ -2,10 +2,10 @@
 
 SSH into Master node (node-0 ) of your cluster and leave the terminal open.
 
-For this exercise we will use a flask app to deploy the food classification model you built in https://colab.research.google.com/drive/16w-mLZ4tSxwH7bZof-1Baota-TIYv19B.
 
 
-To download the content of the flask app run the following command in your terminal.
+
+Clone this repository that contains all the material needed in the further exercises.
 
 ``` shell
 git clone https://github.com/teaching-on-testbeds/k8s-ml.git
