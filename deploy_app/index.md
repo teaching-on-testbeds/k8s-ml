@@ -1,6 +1,6 @@
 ## Exercise: Deploy an image classification app on cloud.
 
-SSH into Master node (node-0 for CloudLab and node1 for Chameleon) of your cluster and leave the terminal open.
+SSH into Master node (node-0 ) of your cluster and leave the terminal open.
 
 For this exercise we will use a flask app to deploy the food classification model you built in https://colab.research.google.com/drive/16w-mLZ4tSxwH7bZof-1Baota-TIYv19B.
 
@@ -11,22 +11,16 @@ To download the content of the flask app run the following command in your termi
 git clone https://github.com/teaching-on-testbeds/k8s-ml.git
 ```
 
-The content of the repository contains everything but the model which you want to deploy. Go to the colab notebook, Train and test the model inside colab, save it by adding the below mentioned python code in the last cell of the notebook.
-
-```python
-model.save("model.h5")
-
-```
-then download the saved model from Colab (use the file brower on the side to locate and download the saved model).
+Transfer the model that you trained in the prev exercise.
 
 Run the below mentioned command 
 
 ``` shell
-echo scp model.h5 $(curl -s ipinfo.io/ip):~/k8s-ml/app
+echo scp model.h5 $USER@$(curl -s ipinfo.io/ip):~/k8s-ml/app
 
 ```
 
-Copy the output of the command and eave the SSH session running and open a new local terminal, change directory to the directory where your model is saved and paste the command you copied and hit enter.
+Copy the output of the command , leave the SSH session running and open a new local terminal, change directory to the directory where your model is saved and paste the command you copied and hit enter.
 if the output looks like this:
 
 ``` shell
