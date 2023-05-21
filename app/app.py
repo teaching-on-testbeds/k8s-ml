@@ -18,11 +18,11 @@ os.makedirs(os.path.join(app.instance_path, 'uploads'), exist_ok=True)
 
 
 model = load_model("model.h5")
-
+target_size = model.input_shape[1:3]
 
 def model_predict(img_path, model):
     im = Image.open(img_path).convert('RGB')
-    image_resized = im.resize((224, 224), Image.BICUBIC)
+    image_resized = im.resize(target_size, Image.BICUBIC)
     test_sample = np.array(image_resized)/255.0
     test_sample = test_sample.reshape(1, 224, 224, 3)
     classes = np.array(["Bread", "Dairy product", "Dessert", "Egg", "Fried food",
