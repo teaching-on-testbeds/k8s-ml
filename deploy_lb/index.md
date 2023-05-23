@@ -13,20 +13,16 @@ cat deployment_lb.yaml
 You can also view the manifest file [here](https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_lb/deployment_lb.yaml).
 
 
-Here, the manifest file defines a Kubernetes service of type LoadBalancer with name flask-test-service and a Kubernetes deployment named flask-test-app.
+Here, the manifest file defines a Kubernetes service of type LoadBalancer with name "flask-test-service" and a Kubernetes deployment named "flask-test-app".
 
-In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort  is the port of container and nodePort is the port of the three nodes. 
-
-In the deployment flask-test-app you have a container which will pull the docker image 10.10.1.1:5000/my-app:0.0.1 from the local registry, "imagePullPolicy: Always" means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry, you can see "replicas:5" which means that the deployment will create 5 replicas of the app and all will be served through the load balancer where the traffic will be divided equally.
-
-Next step is to deploy this app with a load balancer through the help of the manifest file deployment_lb.yaml .
+Next we will deploy this using the manifest file:
 
 ``` shell
 kubectl apply -f deployment_lb.yaml
 
 ```
 
-To check if the deployment is running fine after 2 mins run 
+To check if the deployment is running, after a couple of minutes run 
 
 ``` shell
 kubectl get pods
@@ -43,12 +39,12 @@ echo http://$(curl -s ipinfo.io/ip):32000
 
 copy and paste this URL into your browser's address bar, and verify that your app is up and running there.
 
-and then to stress test your deployment run : 
+and then to stress test your deployment run: 
 
 ``` shell
 siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test
 ```
-Note the number of successful hits
+Make a note of key results - how many transactions were served successfully, how many failed, and what the average response time was. You should see an improvement relative to the single pod deployment!
 
 When you are done with your experiment, make sure to delete the deployment and service:
 
