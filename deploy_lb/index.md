@@ -111,7 +111,7 @@ and then to stress test your deployment run :
 $(echo siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test)
 
 ```
-copy the output of the command and paste them into your web browser.
+Note the number of successfull hits
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
