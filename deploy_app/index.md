@@ -94,25 +94,7 @@ echo http://$(curl -s ipinfo.io/ip):32000
 
 copy the output of the previous command, open your browser and paste the same, you will see that your app is up and running there.
 
-Try doing some predictions.
-
-To test the load on the deployment we will use siege. Siege is a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
-
-Install siege in your system
-
-```shell
-sudo apt-get install siege
-
-```
-and then run 
-
-``` shell
-echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip):32000/test
-
-```
-copy the output of the command and paste them into your web browser.
-
-Here Siege will generate traffic to your website for 120 seconds with a concurrency level of 10 users.
+Try doing some predictions
 
 
 Once you are done using the container, You can stop it by running the below mentioned command:
