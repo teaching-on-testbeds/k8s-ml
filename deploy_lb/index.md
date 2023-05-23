@@ -1,31 +1,17 @@
-## Exercise 3: Scaling a ML-app (Part-1)
+## Exercise 3: Deploy your service with load balancing
 
-Last exercise, we deployed a ML app on kubernetes pod, and we saw that the app was working fine, but what will happen if a lot of traffic comes to the app? The single web service soon becomes overwhelmed, causing slow response times and even downtime. To fix this problem what we can do is create multiple pods and evenly distribute the traffic on each of the pod and this process of evenly distributing traffic on the pods is known as **Load balancing**.
+In the previous exercise, we deployed a single replicate of a Kubernetes pod. But if the load on the service is high, the single pod will have slow response times. We can address this by deploying multiple pods, and distributing the traffic across them by assigning each incoming request to a pod. This is called **load balancing**.
 
-In this exercise our core focus will be to understand and implement the concept of **Load Balancing**.
-
-Load balancing in a Kubernetes cluster involves distributing incoming network traffic across multiple instances of a particular application, service or pod. This is done using a load balancer that sits in front of the application instances or pods and distributes traffic to each of them based on a set of rules or algorithms. Here in our case our load balancer will be using Round Robin algoritm to distribute traffic.
-
-The diagram below shows how exactly traffic flows in a load balancer.
-
-![Load_balancer](/images/load_balancer.png)
-
-
-The core idea is that you have multiple pods running and the traffic is always redirected to the pod which is not busy and is least utilized.
-
-
-To deploy an app with a load balancer we will be needing a manifest file. To file is already there in the folder deploy_lb named as deployment_lb.yaml.
+The manifest file for deploying a load balanced service is named "deployment_lb.yaml", and it is inside the "deploy_lb" directory.
 
 
 ``` shell
 cd ~/k8s-ml/deploy_lb
-```
-
-Next let's understand what is there in the deployment_lb.yaml file.
-
-```shell
 cat deployment_lb.yaml
 ```
+
+You can also view the manifest file [here](https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_lb/deployment_lb.yaml).
+
 
 The output will be as follow
 
