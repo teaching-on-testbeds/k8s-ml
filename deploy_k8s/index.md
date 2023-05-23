@@ -165,12 +165,11 @@ sudo apt-get install siege
 and then run 
 
 ``` shell
-echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip):32000/test
+$(echo siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test)
 
 ```
-copy the output of the command and paste them into your web browser.
 
-Here Siege will generate traffic to your website for 120 seconds with a concurrency level of 10 users.
+Here Siege will generate traffic to your website for 30 seconds with a concurrency level of 10 users.
 
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
