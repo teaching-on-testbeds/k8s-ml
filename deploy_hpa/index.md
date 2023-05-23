@@ -1,4 +1,4 @@
-## Exercise 3: Scaling a ML-app (Part-2)
+## Exercise: Deploy a service with dynamic scaling
 
 In last exercise we used Load balancing to distribute incoming traffic across multiple instances of a particular application running on 5 different pods. The benefit was that in case we have heavy traffic the traffic can be distributed evenly and our service won't be affect. But what if there is a time when the traffic goes down and it can be easily handeled with one pod. in that case the other pods won't be used and the existing resources are not getting used efficiently. To fix this issue we use Horizontal scalling.
 
