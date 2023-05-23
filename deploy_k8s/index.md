@@ -100,8 +100,7 @@ and then run
 siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test
 ```
 
-Here Siege will generate traffic to your website for 30 seconds with a concurrency level of 10 users.
-
+Here Siege will generate traffic to a "test" endpoint on your website, which requests a prediction for a pre-saved image, for 30 seconds with a concurrency level of 10 users. After it finishes execution, make a note of key results - how many transactions were served successfully, how many failed, and what the average response time was. 
 
 When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
 
