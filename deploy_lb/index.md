@@ -13,55 +13,7 @@ cat deployment_lb.yaml
 You can also view the manifest file [here](https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_lb/deployment_lb.yaml).
 
 
-The output will be as follow
-
-``` shell
-apiVersion: v1
-kind: Service
-metadata:
-  name: flask-test-service
-spec:
-  selector:
-    app: flask-test-app
-  ports:
-  - protocol: "TCP"
-    port: 6000
-    targetPort: 5000
-    nodePort: 32000
-  type: LoadBalancer
-
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: flask-test-app
-spec:
-  selector:
-    matchLabels:
-      app: flask-test-app
-  replicas: 5
-  template:
-    metadata:
-      labels:
-        app: flask-test-app
-    spec:
-      containers:
-      - name: flask-test-app
-        image: node-0:5000/ml-app:0.0.1
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
-        resources:
-          limits:
-            cpu: "8"
-            memory: "5Gi"
-          requests:
-            cpu: "5"
-            memory: "5Gi"
-```
-
-Here, the manifest file defines a kubernetes service of type LoadBalancer with name flask-test-service and a kubernetes deployment named flask-test-app.
+Here, the manifest file defines a Kubernetes service of type LoadBalancer with name flask-test-service and a Kubernetes deployment named flask-test-app.
 
 In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort  is the port of container and nodePort is the port of the three nodes. 
 
