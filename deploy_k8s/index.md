@@ -8,84 +8,30 @@ What are some benefits of using Kubernetes, rather than deploying containers dir
 - *Container Orchestration:* Kubernetes helps to automate the deployment, scaling and management of applications that are containerized. it also helps to manage containers and their interdependency.
 
 - *Self-healing:* If a container fails, Kubernetes can automatically detect it and replace it with a fully functional container to make sure that the application is always available and running.
-
 - *Service discovery and load balancing:* Kubernetes provides a built-in service discovery mechanism which helps containers to find other containers running inside the cluster and communicate with each other, even as they are dynamically created and destroyed. Kubernetes also has a built-in load balancing mechanism that can distribute traffic across multiple instances of your application. In next exercise we will be implementing load balancing on our app.
-
 - *Resource management:* Kubernetes allows you to set resource limits and requests for your applications, ensuring that the application have the resources to run efficiently.
 
 *Pods* are the basic components in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way. They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
 
 Although we will eventually deploy pods across all three of our nodes, our deployment will be managed from the "master" node, which is node-0.
 
-To deploy an app on a kubernetes cluster we need a manifest file. We have the manifest in the folder deploy_k8s named as deployment_k8s.yaml , lets go to the folder :
+To deploy an app on a Kubernetes cluster, we use a manifest file, which describes our deployment. For this exercise, we will use the "deployment_k8s.yaml" file inside the "deploy_k8s" directory, which you can see by running:
 
 ``` shell
-
 cd ~/k8s-ml/deploy_k8s
-
-```
-
-Next let's understand what is there in the deployment_k8s.yaml file.
-
-
-```Shell
 cat deployment_k8s.yaml
-
 ```
 
-The output will look like this:
+You can also view the manifest file [here](https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_k8s/deployment_k8s.yaml).
 
-```shell 
-apiVersion: v1
-kind: Service
-metadata:
-  name: flask-test-service
-spec:
-  selector:
-    app: flask-test-app
-  ports:
-  - protocol: "TCP"
-    port: 6000
-    targetPort: 5000
-    nodePort: 32000
-  type: NodePort
+This manifest file defines a Kubernetes service named "flask-test-service" and a Kubernetes deployment named "flask-test-app".
 
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: flask-test-app
-spec:
-  selector:
-    matchLabels:
-      app: flask-test-app
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: flask-test-app
-    spec:
-      containers:
-      - name: flask-test-app
-        image: node-0:5000/ml-app:0.0.1
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
-        resources:
-          limits:
-            cpu: "8"
-            memory: "5Gi"
-          requests:
-            cpu: "5"
-            memory: "5Gi"
+* Inside the service definition, you can see the ports that will be used by the deployment. 
+* Inside the deployment definition, you can see that 
+   * the "ml-app" container you built earlier will be retrieved from the local registry ("node-0:5000/my-app:0.0.1"), 
+   * and it will not be cached ("imagePullPolicy: Always"), 
+   * the deployment will include just a single copy of our pod ("replicas: 1").
 
-```
-
-Here, the manifest file defines a kubernetes service with name flask-test-service and a kubernetes deployment named flask-test-app.
-
-In the service you can see the ports are defined on which the app will be served. Port is the port of the cluster, targetPort  is the port of container and nodePort is the port of the three nodes. 
-
-In the deployment flask-test-app you have a container which will pull the docker image node-0:5000/my-app:0.0.1 from the local registry, "imagePullPolicy: Always" means that the app won't be using cached image and every time the deployment is created it will pull a new image from the registry.
 
 The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
 
