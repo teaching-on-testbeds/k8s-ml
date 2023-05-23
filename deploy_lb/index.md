@@ -108,7 +108,7 @@ copy the output of the previous command, open your browser and paste the same, y
 and then to stress test your deployment run : 
 
 ``` shell
-echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip):32000/test
+$(echo siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test)
 
 ```
 copy the output of the command and paste them into your web browser.
