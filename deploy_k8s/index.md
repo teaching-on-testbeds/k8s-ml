@@ -91,14 +91,13 @@ To test the load on the deployment we will use `siege, a command-line tool used 
 Install siege on node-0:
 
 ```shell
-sudo apt-get install siege
+sudo apt-get update; sudo apt-get -y install siege
 
 ```
 and then run 
 
 ``` shell
-$(echo siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test)
-
+siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test
 ```
 
 Here Siege will generate traffic to your website for 30 seconds with a concurrency level of 10 users.
