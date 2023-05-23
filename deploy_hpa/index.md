@@ -125,10 +125,9 @@ Initially you will see that there is only one pod running, but with time when th
 and then to stress test run the below mentioned command: 
 
 ``` shell
-echo siege -c 10 -t 120s http://$(curl -s ipinfo.io/ip):32000/test
+$(echo siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test)
 
 ```
-copy the output of the command and paste them into your web browser.
 
 Once you complete this exercise make sure to delete the deployment and services running. 
 
