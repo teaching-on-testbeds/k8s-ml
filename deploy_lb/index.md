@@ -83,27 +83,24 @@ kubectl get pods
 
 If the status of all pods says as "Running" this means that the pods are healthy and running fine.
 
-Run the below mentioned command in the same terminal:
+Get the URL of the service - run
 
 ``` shell
 echo http://$(curl -s ipinfo.io/ip):32000
 ```
 
-copy the output of the previous command, open your browser and paste the same, you will see that your app is up and running there.
+copy and paste this URL into your browser's address bar, and verify that your app is up and running there.
 
 and then to stress test your deployment run : 
 
 ``` shell
-$(echo siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test)
-
+siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test
 ```
-Note the number of successfull hits
+Note the number of successful hits
 
-When you are done with your experiment, make sure to delete the deployment and service. To delete run the command:
+When you are done with your experiment, make sure to delete the deployment and service:
 
 ``` shell
 kubectl delete -f deployment_lb.yaml
 
 ```
-
-This exercise is complete here.
