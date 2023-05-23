@@ -1,5 +1,5 @@
 
-## Exercise 2: Deploy your service using container orchestration (Kubernetes)
+## Exercise: Deploy your service using container orchestration (Kubernetes)
 
 In the previous exercise, we deployed a container by running it directly. Now, we will deploy the same container using Kubernetes, a platform for container orchestration.
 
