@@ -13,10 +13,9 @@ What are some benefits of using Kubernetes, rather than deploying containers dir
 
 - *Resource management:* Kubernetes allows you to set resource limits and requests for your applications, ensuring that the application have the resources to run efficiently.
 
-*Pods* are the basic components in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way.They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
+*Pods* are the basic components in Kubernetes and are used to deploy and manage containerized applications in a scalable and efficient way. They are designed to be ephemeral, meaning they can be created, destroyed, and recreated as needed. They can also be replicated, which allows for load balancing and high availability.
 
-
-In our cluster node-1 is the master node so we will log into node-1.
+Although we will eventually deploy pods across all three of our nodes, our deployment will be managed from the "master" node, which is node-0.
 
 To deploy an app on a kubernetes cluster we need a manifest file. We have the manifest in the folder deploy_k8s named as deployment_k8s.yaml , lets go to the folder :
 
