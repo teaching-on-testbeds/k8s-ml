@@ -88,7 +88,7 @@ copy and paste this URL into your browser's address bar, and verify that your ap
 
 To test the load on the deployment we will use Siege, a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
 
-Install siege on node-0:
+Install Siege on node-0:
 
 ```shell
 sudo apt-get update; sudo apt-get -y install siege
