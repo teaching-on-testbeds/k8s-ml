@@ -1,8 +1,6 @@
 ## Exercise: Deploy an image classification app as a web service
 
-SSH into "node-0: of your cluster and leave the terminal open.
-
-Clone this repository, which contains all the material needed in the further exercises.
+SSH into node-0 of your cluster. In this terminal, clone this repository, which contains all the material needed in the further exercises.
 
 ``` shell
 git clone https://github.com/teaching-on-testbeds/k8s-ml.git
