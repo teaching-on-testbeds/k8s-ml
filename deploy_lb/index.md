@@ -1,4 +1,4 @@
-## Exercise 3: Deploy your service with load balancing
+## Exercise: Deploy your service with load balancing
 
 In the previous exercise, we deployed a single replicate of a Kubernetes pod. But if the load on the service is high, the single pod will have slow response times. We can address this by deploying multiple pods, and distributing the traffic across them by assigning each incoming request to a pod. This is called **load balancing**.
 
