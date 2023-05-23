@@ -6,7 +6,7 @@ SSH into node-0 of your cluster. In this terminal, clone this repository, which 
 git clone https://github.com/teaching-on-testbeds/k8s-ml.git
 ```
 
-Then, transfer the model that you trained in the previous exercise to this node - run this command
+Now, you will need the model that you trained in the previous exercise. (As a demo, though, you can use the saved model that is already in this repository.)  Transfer the model that you trained in the previous exercise to node-0 - run
 
 ``` shell
 echo scp model.h5 $USER@$(curl -s ipinfo.io/ip):~/k8s-ml/app
