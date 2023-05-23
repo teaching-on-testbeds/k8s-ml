@@ -86,7 +86,7 @@ echo http://$(curl -s ipinfo.io/ip):32000
 
 copy and paste this URL into your browser's address bar, and verify that your app is up and running there.
 
-To test the load on the deployment we will use `siege, a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
+To test the load on the deployment we will use Siege, a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
 
 Install siege on node-0:
 
@@ -116,7 +116,5 @@ service "flask-test-service" deleted
 deployment.apps "flask-test-app" deleted
 ```
 The deployment is deleted.
-
-This exercise is complete.
 
 
