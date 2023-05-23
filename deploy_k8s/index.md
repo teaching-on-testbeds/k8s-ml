@@ -32,26 +32,23 @@ This manifest file defines a Kubernetes service named "flask-test-service" and a
    * and it will not be cached ("imagePullPolicy: Always"), 
    * the deployment will include just a single copy of our pod ("replicas: 1").
 
-
-The last and final step is to apply the content of the deployment_k8s.yaml file. run the command below to do so:
+To start this deployment, we will run:
 
 ``` shell
 kubectl apply -f deployment_k8s.yaml
 
 ```
 
-If the output looks similar to this
+and make sure the following output appears:
 
 ``` shell
 service/flask-test-service created
 deployment.apps/flask-test-app created
 ```
 
-Then it means your deployment is successfull.
+It will take close to a minute for the pod to start running.
 
-Since the content of our pod is large so it will take close to a minute for the pod to start running.
-
-To check the status of pod run the below mentioned command:
+To check the status of deployment, run:
 
 ``` shell
 kubectl get pods -o wide
@@ -63,11 +60,9 @@ The output will look similar to
 NAME                                               READY   STATUS              RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
 flask-test-app-7b4c8648c6-r8zvv                    0/1     ContainerCreating   0          22s     <none>        node-2   <none>           <none>
 nfs-subdir-external-provisioner-7567fc7fcf-6qkcj   1/1     Running             0          3d21h   192.168.5.4   node-2   <none>           <none>
-
 ```
-Here the status of the pod shows ContainerCreating which means the container is getting ready.
 
-if the status of pods shows as Running then it means the pod is healthy and is running.
+Here the status of the pod is ContainerCreating, which means the container is getting ready. When it reaches the Running state, then it means the pod is healthy and is running.
 
 Since our pod is running on the cluster via a service, we also need to check the status of the service. To check run the command:
 
@@ -81,19 +76,19 @@ NAME                 TYPE        CLUSTER-IP        EXTERNAL-IP   PORT(S)        
 flask-test-service   NodePort    192.168.153.237   <none>        6000:32000/TCP   2m20s   app=flask-test-app
 kubernetes           ClusterIP   192.168.128.1     <none>        443/TCP         3d21h   <none>
 ```
-The port shows as 6000:32000/TCP which means the service is running inside the cluster on port 6000 and is binded to port 32000 of our nodes.
+The port shows as 6000:32000/TCP which means the service is running inside the cluster on port 6000 and is bound to port 32000 on the nodes.
 
-Run the below mentioned command in the same terminal:
+Get the URL of the service - run
 
 ``` shell
 echo http://$(curl -s ipinfo.io/ip):32000
 ```
 
-copy the output of the previous command, open your browser and paste the same, you will see that your app is up and running there.
+copy and paste this URL into your browser's address bar, and verify that your app is up and running there.
 
-To test the load on the deployment we will use siege. Siege is a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
+To test the load on the deployment we will use `siege, a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
 
-Install siege in your system
+Install siege on node-0:
 
 ```shell
 sudo apt-get install siege
