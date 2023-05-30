@@ -1,4 +1,5 @@
 {
-    "insecure-registries": ["node-0:5000"]
+    "insecure-registries": ["node-0:5000"],
+    "mtu": 1450
 }
 
