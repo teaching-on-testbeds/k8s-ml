@@ -1,6 +1,6 @@
-## Open Educational Resources for Teaching Machine Learning Systems Deployment
+## Machine Learning Systems Deployment with Kubernetes
 
-In this assignment, you will execute a sequence of experiments on the CloudLab or Chameleon testbed in order to learn more about deploying machine learning models to the cloud.
+In this assignment, you will execute a sequence of experiments on the CloudLab or Chameleon testbeds in order to learn more about deploying machine learning models to the cloud.
 
 These instructions assume you have already completed the [Hello, CloudLab](https://teaching-on-testbeds.github.io/blog/hello-cloudlab) or [Hello, Chameleon](https://teaching-on-testbeds.github.io/blog/hello-chameleon) sequence to configure your account and learn how to use the testbed.
 
