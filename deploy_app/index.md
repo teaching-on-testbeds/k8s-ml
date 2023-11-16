@@ -1,15 +1,13 @@
-## Exercise: Deploy an image classification app on cloud.
+## Exercise: Deploy image classification as a web service
 
 SSH into node-0 of your cluster and leave the terminal open.
+
+
+### Transfer a saved model to the remote host
 
 For this exercise we will use a flask app to deploy the food classification model you built in https://colab.research.google.com/drive/16w-mLZ4tSxwH7bZof-1Baota-TIYv19B.
 
 
-To download the content of the flask app run the following command in your terminal.
-
-``` shell
-git clone https://github.com/teaching-on-testbeds/k8s-ml.git
-```
 
 The content of the repository contains everything but the model which you want to deploy. Go to the colab notebook, Train and test the model inside colab, save it by adding the below mentioned python code in the last cell of the notebook.
 
@@ -19,10 +17,10 @@ model.save("model.h5")
 ```
 then download the saved model from Colab (use the file brower on the side to locate and download the saved model).
 
-Leave the SSH session running and open a new local terminal, change directory to the directory where your model is saved and run the below mentioned scp command to transfer the model to remote.
+Leave the SSH session running and open a new local terminal, change directory to the directory where your model is saved and run the below mentioned scp command to transfer the model to remote. Replace `USERNAME` and `HOSTNAME`...
 
 ``` shell
-scp model.h5 "name of remote host":/users/username/k8s-ml/app/
+scp model.h5 USERNAME@HOSTNAME:~/k8s-ml/app/
 
 ```
 
@@ -33,26 +31,14 @@ Once the file is transfered, open the ssh session at node-0
 
 Now we are ready to run the flask app, We will be using Docker to containerise the ml-app. Learning Docker is a large process and that is not the part of this exercise. To make sure that you don't get stuck with docker, a Dockerfile is already provided in the app you downloaded.
 
-Before we move ahead let's check if we have docker installed in our system.
-
-``` shell
-docker -v
-```
-
-The output should be similiar to
-
-``` shell
-
-Docker version 19.03.15, build 99e3ed8919
-```
 
 The next step is to get into app directory which contains flask app
 
 ``` shell
-cd k8s-ml/app
+cd ~/k8s-ml/app
 ```
 
-Before going ahead make sure that the folder structure is same as below
+This directory has the following structure:
 
 -   app
     -   instance
@@ -63,10 +49,9 @@ Before going ahead make sure that the folder structure is same as below
     -   requirements.txt
     -   model.h5
 
-Next step is to create a docker image of our flask app and push it to the local registry running at 10.10.1.1:5000
+Next step is to create a docker image of our Flask app and push it to the local registry running at 10.10.1.1:5000
 
 ``` shell
-
 docker build --no-cache -t ml-app:0.0.1 .
 docker tag ml-app:0.0.1  10.10.1.1:5000/ml-app:0.0.1
 docker push 10.10.1.1:5000/ml-app:0.0.1
@@ -75,16 +60,22 @@ docker push 10.10.1.1:5000/ml-app:0.0.1
 The command above will build a docker image named ml-app whose version is 0.0.1 and the push it to a local registry running at 10.10.1.1:5000.
 Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
 
-For instance we let's run a docker container on port 32001
+For instance we let's run a docker container on port 8000
 
 ``` shell
-docker run -d -p 32001:5000 10.10.1.1:5000/ml-app:0.0.1
+docker run -d -p 8000:5000 10.10.1.1:5000/ml-app:0.0.1
 ```
 
 -   -d is for detach mode.
 -   -p is to assign the port host_port:container_port.
 
-Open your browser and enter "name of the remote host":32001 which can be similar to "username@pc724.emulab.net:32001", you will see that your app is up and running there.
+To get the URL on which to access the service, run
+
+```shell
+echo "http://$(hostname):8000"
+```
+
+Copy this URL, and paste it into the address bar in your browser.
 
 Try doing some predictions.
 
