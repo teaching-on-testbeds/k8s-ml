@@ -1,0 +1,3 @@
+[submodule "chameleon-snippets"]
+	path = chameleon-snippets
+	url = https://github.com/teaching-on-testbeds/chameleon-snippets
