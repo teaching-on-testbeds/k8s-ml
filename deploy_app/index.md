@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Exercise: Deploy image classification as a web service
 
 SSH into node-0 of your cluster and leave the terminal open.
@@ -22,23 +23,55 @@ Leave the SSH session running and open a new local terminal, change directory to
 ``` shell
 scp model.h5 USERNAME@HOSTNAME:~/k8s-ml/app/
 
+=======
+## Exercise: Deploy an image classification app as a web service
+
+SSH into node-0 of your cluster. In this terminal, clone this repository, which contains all the material needed in the further exercises.
+
+``` shell
+git clone https://github.com/teaching-on-testbeds/k8s-ml.git
 ```
 
-The name of the remote host can be obtained by copying from the list view of cloudlab home page.
-it looks similar to "username@pc724.emulab.net" also remove username by your CloudLab username. Make sure to copy the name of the remote host as it's needed in the future exercises.
+Now, you will need the model that you trained in the previous exercise. (As a demo, though, you can use the saved model that is already in this repository.)  Transfer the model that you trained in the previous exercise to node-0 - run
 
+``` shell
+echo scp model.h5 $USER@$(curl -s ipinfo.io/ip):~/k8s-ml/app
+>>>>>>> 9e6db1c4fca74ce4defef213925b6f5b59b7efe7
+```
+
+to get an SCP command, then run the SCP command in your *local* terminal (not in the SSH session), from the directory where your model is saved. (If your SSH key is in a non-default location, you will need to add an argument to specify the key location.)
+
+<<<<<<< HEAD
 Once the file is transfered, open the ssh session at node-0
 
 Now we are ready to run the flask app, We will be using Docker to containerise the ml-app. Learning Docker is a large process and that is not the part of this exercise. To make sure that you don't get stuck with docker, a Dockerfile is already provided in the app you downloaded.
 
 
 The next step is to get into app directory which contains flask app
+=======
+The output should look like this:
+
+``` shell
+model.h5                                                                                                                  100%  155MB   8.9MB/s   00:17
+```
+indicating that your model is transfered from your local to remote.
+
+Once the file is transfered, return to the SSH session at node-0.
+
+Now we are ready to deploy our model as a service. Rather than deploying it directly, we will use Docker to package our model, source code, and dependencies in a *container*. This will make it much easier to deploy multiple copies of the application (to handle heavier load) in future exercises.
+
+Next, navigate to the directory that contains our application, which is implemented using Flask:
+>>>>>>> 9e6db1c4fca74ce4defef213925b6f5b59b7efe7
 
 ``` shell
 cd ~/k8s-ml/app
 ```
 
+<<<<<<< HEAD
 This directory has the following structure:
+=======
+The directory structure is as shown below:
+>>>>>>> 9e6db1c4fca74ce4defef213925b6f5b59b7efe7
 
 -   app
     -   instance
@@ -49,13 +82,55 @@ This directory has the following structure:
     -   requirements.txt
     -   model.h5
 
+<<<<<<< HEAD
 Next step is to create a docker image of our Flask app and push it to the local registry running at 10.10.1.1:5000
+=======
+This directory includes a Dockerfile, which describes how to containerize the application. We will build the container (naming it `ml-app`) and then push it to a local "registry" of containers (which is running on port 5000 of node-0).
 
 ``` shell
 docker build --no-cache -t ml-app:0.0.1 .
-docker tag ml-app:0.0.1  10.10.1.1:5000/ml-app:0.0.1
-docker push 10.10.1.1:5000/ml-app:0.0.1
+docker tag ml-app:0.0.1  node-0:5000/ml-app:0.0.1
+docker push node-0:5000/ml-app:0.0.1
 ```
+
+Now that we have containerized our application, we can run it! Let's run it now, and will indicate that we want incoming requests on port 32000 to be passed to port 5000 on the container (where our Flask application is listening):
+
+``` shell
+docker run -d -p 32000:5000 node-0:5000/ml-app:0.0.1
+```
+
+-   `-d` is for detach mode.
+-   `-p` is to assign the port host_port:container_port.
+
+Now we can visit our web service and try it out! Run this command:
+
+``` shell
+echo http://$(curl -s ipinfo.io/ip):32000
+```
+
+to get the URL on which it is running, then open your browser and paste this URL into the address bar.
+
+You can upload images to your image classification service and check its predictions.
+
+When you are finished, you can stop the container by running:
+
+
+``` shell
+docker stop $(docker ps -q -f ancestor=ml-app:0.0.1)
+
+```
+
+---
+
+In this exercise or in a future exercise, you may want to change the model underlying your service. If you do, you will need to repeat the SCP command to transfer the saved model. Then, you will have to rebuild the container, following the same steps as you did above while building the container for the first time.
+>>>>>>> 9e6db1c4fca74ce4defef213925b6f5b59b7efe7
+
+``` shell
+docker build --no-cache -t ml-app:0.0.1 .
+docker tag ml-app:0.0.1  node-0:5000/ml-app:0.0.1
+docker push node-0:5000/ml-app:0.0.1
+```
+<<<<<<< HEAD
 
 The command above will build a docker image named ml-app whose version is 0.0.1 and the push it to a local registry running at 10.10.1.1:5000.
 Now our docker image is built and is available to use, we can use it any number of time and concurrently on different ports. In all future exercises we will be using the same docker image.
@@ -119,3 +194,5 @@ docker push 10.10.1.1:5000/ml-app:0.0.1
 In future exercises too you need to follow the same process to rebuild a container.
 
 This exercise is complete here.
+=======
+>>>>>>> 9e6db1c4fca74ce4defef213925b6f5b59b7efe7

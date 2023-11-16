@@ -9,7 +9,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: ml-app-hpa
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 40
 ---
 apiVersion: v1
 kind: Service
@@ -22,7 +22,7 @@ spec:
   - protocol: "TCP"
     port: 6000
     targetPort: 5000
-    nodePort: 8000
+    nodePort: 32000
   type: LoadBalancer
 ---
 
@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: ml-app-hpa
-        image: 10.10.1.1:5000/ml-app:0.0.1
+        image: node-0:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000

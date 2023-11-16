@@ -9,6 +9,7 @@ from werkzeug.utils import secure_filename
 import time
 import os
 import json
+import psutil
 
 app = Flask(__name__)
 
@@ -18,11 +19,11 @@ os.makedirs(os.path.join(app.instance_path, 'uploads'), exist_ok=True)
 
 
 model = load_model("model.h5")
-
+target_size = model.input_shape[1:3]
 
 def model_predict(img_path, model):
     im = Image.open(img_path).convert('RGB')
-    image_resized = im.resize((224, 224), Image.BICUBIC)
+    image_resized = im.resize(target_size, Image.BICUBIC)
     test_sample = np.array(image_resized)/255.0
     test_sample = test_sample.reshape(1, 224, 224, 3)
     classes = np.array(["Bread", "Dairy product", "Dessert", "Egg", "Fried food",
@@ -43,19 +44,20 @@ def index():
 
 @app.route('/predict', methods=['GET', 'POST'])
 def upload():
-    start_time = time.time()
     preds = None
     if request.method == 'POST':
         # Get the file from post request
         f = request.files['file']
         print(f)
-        #f.save(secure_filename(f.filename))
         f.save(os.path.join(app.instance_path, 'uploads', secure_filename(f.filename)))
-        # Make prediction
+        memory_usage_before = psutil.virtual_memory().used
+        start_time = time.time()
         preds = model_predict("./instance/uploads/" + f.filename, model)
         end_time = time.time()
+        memory_usage_after = psutil.virtual_memory().used
+        memory_usage_during = (memory_usage_after - memory_usage_before) / (1024 * 1024)
         elapsed_time =  end_time - start_time
-        return str(preds) + f", Inference Time : {elapsed_time}"
+        return str(preds) + ", Inference Time : {:.4f} seconds".format(elapsed_time) + ", "  + "Memory usage : {:.4f}mb".format(memory_usage_during)
     return "<h1> Sorry Cant make any preds </h1>"
 
 @app.route('/test', methods=['GET'])

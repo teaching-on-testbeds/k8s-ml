@@ -79,4 +79,12 @@ If you click on **List view**, you will see SSH login details for each node, wit
 
 Open a terminal, and use it to SSH into the "node-0" node. (You may have to add an `-i` argument to the SSH command shown on the CloudLab portal, if your SSH key is not in the default location.)
 
+Inside this SSH session, get a local copy of all the assignment materials:
+
+
+``` shell
+git clone https://github.com/teaching-on-testbeds/k8s-ml.git
+```
+
+
 Open a second terminal, and leave it logged in to your local shell. You will use this local terminal for SCP.
