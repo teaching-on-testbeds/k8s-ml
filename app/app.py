@@ -25,14 +25,14 @@ def model_predict(img_path, model):
     im = Image.open(img_path).convert('RGB')
     image_resized = im.resize(target_size, Image.BICUBIC)
     test_sample = np.array(image_resized)/255.0
-    test_sample = test_sample.reshape(1, 224, 224, 3)
+    test_sample = test_sample.reshape(1, target_size[0], target_size[1], 3)
     classes = np.array(["Bread", "Dairy product", "Dessert", "Egg", "Fried food",
 	"Meat", "Noodles/Pasta", "Rice", "Seafood", "Soup",
 	"Vegetable/Fruit"])
     test_probs = model.predict(test_sample)
     most_likely_classes = np.argmax(test_probs.squeeze())
     
-    return classes[most_likely_classes]
+    return classes[most_likely_classes], test_probs.squeeze()[most_likely_classes]
 
 
 
@@ -52,13 +52,13 @@ def upload():
         f.save(os.path.join(app.instance_path, 'uploads', secure_filename(f.filename)))
         memory_usage_before = psutil.virtual_memory().used
         start_time = time.time()
-        preds = model_predict("./instance/uploads/" + f.filename, model)
+        preds, probs = model_predict("./instance/uploads/" + f.filename, model)
         end_time = time.time()
         memory_usage_after = psutil.virtual_memory().used
         memory_usage_during = (memory_usage_after - memory_usage_before) / (1024 * 1024)
         elapsed_time =  end_time - start_time
-        return str(preds) + ", Inference Time : {:.4f} seconds".format(elapsed_time) + ", "  + "Memory usage : {:.4f}mb".format(memory_usage_during)
-    return "<h1> Sorry Cant make any preds </h1>"
+        return str(preds) + " (" + str(round(probs, 2)) + "), Inference Time : {:.4f} seconds".format(elapsed_time) # + ", "  + "Memory usage : {:.4f}mb".format(memory_usage_during)
+    return "<h1> Error - no prediction </h1>"
 
 @app.route('/test', methods=['GET'])
 def test():
@@ -68,4 +68,4 @@ def test():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=False)
