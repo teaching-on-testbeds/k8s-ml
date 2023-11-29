@@ -18,7 +18,7 @@ os.makedirs(os.path.join(app.instance_path, 'uploads'), exist_ok=True)
 
 
 
-model = load_model("model.h5")
+model = load_model("model.keras")
 target_size = model.input_shape[1:3]
 
 def model_predict(img_path, model):
