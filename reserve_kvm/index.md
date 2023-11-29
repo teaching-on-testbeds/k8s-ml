@@ -36,3 +36,20 @@ Near the beginning of the notebook, you are asked to specify your Chameleon proj
 * or use Run \> Run All Cells from the menu to execute the entire notebook
 
 It will take about 30-45 minutes to set up the entire experiment, so you can step away and come back after it is finished! Then, scroll to the bottom of the notebook to get instructions for (1) logging in to the "controller" node in your cluster, and (2) transferring a saved model from your local device to the "controller" node in your cluster.
+
+### Releasing resources
+
+As mentioned above, you may not "hold on" to resources for an extended period of time (days or weeks) - you will have resources only while you are actively working on them (hours) and then you will release them for others to use.
+
+When you are not actively working on resources anymore, you will:
+
+* open the `delete_chameleon.ipynb` notebook in the Chameleon Jupyter environment
+* fill in your project ID near the beginning of the notebook
+* then run the notebook to release resources
+
+In some cases, if there is an error when releasing resources using the notebook, you may need to manually release resource from the [KVM@TACC web interface](https://kvm.tacc.chameleoncloud.org/project/). Here are the instructions for manually releasing resources:
+
+* First, click on Network \> Floating IPs. In any row that includes your username in the "Mapped Fixed IP Address" column, click "Disassociate", then "Release Floating IP".
+* Next, click on Compute \> Instances. Check the box next to any instance(s) that include your username. Then, click "Delete Instances".
+* Click on Network \> Routers. In any row that includes your username, click "Clear Gateway" then "Delete Router".
+* Click on Network \> Networks. Check the box next to any network(s) that include your username. Then, click "Delete Networks".
