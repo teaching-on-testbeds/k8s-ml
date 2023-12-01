@@ -42,7 +42,7 @@ docker run -d -p 32000:5000 node-0:5000/ml-app:0.0.1
 Here, 
 
 -   `-d` is for detach mode - so we can leave it running int he background.
--   `-p` is to assign the mapping between "incoming request port" and "container port'.
+-   `-p` is to assign the mapping between "incoming request port" (32000) and "container port' (5000).
 
 
 You can see the list of running containers with 
@@ -104,6 +104,8 @@ and then
 ```
 docker run -d -p 32000:5000 node-0:5000/ml-app:0.0.1
 ```
+
+> **Debugging your service**: if something goes wrong, you can use `docker run -p 32000:5000 node-0:5000/ml-app:0.0.1` to run your service *without* detaching from it, so that you can see output (including error messages).
 
 (For a model that is very large, it may take a few minutes - even up to 10 minutes - before the container is ready to accept requests.)
 

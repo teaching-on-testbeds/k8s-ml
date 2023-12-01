@@ -90,8 +90,10 @@ Now that we have a Kubernetes cluster, we have a framework in place for containe
 
 ::: {.cell .code}
 ```python
-# add the user to the "docker" group
-remote.run("sudo groupadd -f docker; sudo usermod -aG docker $USER")
+# add the user to the "docker" group on all hosts
+for physical_ip in physical_ips:
+    remote_worker = chi.ssh.Remote(physical_ip, gateway=remote)
+    remote_worker.run("sudo groupadd -f docker; sudo usermod -aG docker $USER")
 ```
 :::
 

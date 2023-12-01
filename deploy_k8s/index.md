@@ -13,15 +13,15 @@ What are some benefits of using a container orchestration framework like Kuberne
 
 Although we will eventually deploy pods across all three of our "worker" nodes, our deployment will be managed from the "controller" node, which is "node-0".
 
-To deploy an app on a Kubernetes cluster, we use a manifest file, which describes our deployment. For this exercise, we will use the "deployment_k8s.yaml" file inside the "deploy_k8s" directory, which you can see [here](https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_k8s/deployment_k8s.yaml).
+To deploy an app on a Kubernetes cluster, we use a manifest file, which describes our deployment. For this exercise, we will use the "deployment_k8s.yaml" file inside the "~/k8s-ml/deploy_k8s" directory, which you can see [here](https://github.com/teaching-on-testbeds/k8s-ml/blob/main/deploy_k8s/deployment_k8s.yaml).
 
-This manifest file defines a Kubernetes service named "flask-test-service" and a Kubernetes deployment named "flask-test-app".
+This manifest file defines a Kubernetes service named "ml-kube-service" and a Kubernetes deployment named "ml-kube-app".
 
-* Inside the service definition, you can see the ports that will be used by the deployment. 
+* Inside the service definition, we create a service of `type: NodePort`. This service passes incoming requests on a specified port, to a (different) port on the pod. 
 * Inside the deployment definition, you can see that 
-   * the "ml-app" container you built earlier will be retrieved from the local registry ("node-0:5000/my-app:0.0.1"), 
-   * and it will not be cached ("imagePullPolicy: Always"), 
+   * the "ml-app" container you built earlier will be retrieved from the local registry ("node-0:5000/ml-app:0.0.1"), 
    * the deployment will include just a single copy of our pod ("replicas: 1").
+   * there is a "readiness" probe defined - the container is considered "Ready" and requests will be forwarded to it only when it responds with a success code to 3 HTTP requests on the `/test` endpoint.
 
 
 It also defines the resource requirements of the container, in terms of CPU cores and memory. The "request" defines the minimum resource a container may get, and the "limit" defines the maximum resource a container may get.
@@ -35,44 +35,51 @@ kubectl apply -f ~/k8s-ml/deploy_k8s/deployment_k8s.yaml
 and make sure the following output appears:
 
 ```
-service/flask-test-service created
-deployment.apps/flask-test-app created
+service/ml-kube-service created
+deployment.apps/ml-kube-app created
 ```
 
-Wait a few minutes for the pod to start running.
 
-To check the status of deployment, run:
+Let's check the status of the service. Run the command:
+
+``` shell
+kubectl get svc -o wide
+```
+
+The output will include a line similar to
+
+```
+NAME                 TYPE        CLUSTER-IP        EXTERNAL-IP   PORT(S)         AGE     SELECTOR
+ml-kube-service   NodePort    10.233.37.25   <none>        6000:32000/TCP   12m     app=ml-kube-app
+```
+
+It may take a few minutes for the pod to start running. To check the status of pods, run:
+
+
 
 ``` 
 kubectl get pods -o wide
 ```
 
-The output will include a line similar to
+The output may include a line similar to
 
 ```
 NAME                                               READY   STATUS              RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
-flask-test-app-7b4c8648c6-r8zvv                    0/1     ContainerCreating   0          22s     <none>        node-2   <none>           <none>
+ml-kube-app-7b4c8648c6-r8zvv                    0/1     ContainerCreating   0          22s     <none>        node-2   <none>           <none>
 ```
 
-Here the status of the pod is `ContainerCreating`, which means the container is getting ready. When it reaches the `Running` state, then it means the pod is healthy and is running.
+In this example, the status of the pod is `ContainerCreating`, which means the container is getting ready. When it reaches the `Running` state, then it means the pod is healthy and is running. When it shows "1/1" in the "Ready" column, it is ready to accept services according to the probe we had set up.
 
-Since our pod is running on the cluster via a service, we also need to check the status of the service. Run the command:
+(As before, if your model is large, it may take a while before it is ready to accept requests.)
 
-``` shell
-kubectl get svc -o wide
-```
-The output will include a line similar to
 
-```
-NAME                 TYPE        CLUSTER-IP        EXTERNAL-IP   PORT(S)         AGE     SELECTOR
-flask-test-service   NodePort    10.233.37.25   <none>        6000:32000/TCP   12m     app=flask-test-app
-```
-
-Once the pod is running, you can see the resource usage (CPU and memory) of the pod with
+Once the pod is ready, check the resource usage (CPU and memory) of the pod with
 
 ```
 kubectl top pod
 ```
+
+Note that the resource usage varies depending on whether or not the pod is currently serving a request!
 
 Get the URL of the service - run
 
@@ -80,11 +87,11 @@ Get the URL of the service - run
 echo http://$(curl -s ipinfo.io/ip):32000
 ```
 
-copy and paste this URL into your browser's address bar, and verify that your app is up and running there. (As before, if your model is large, it may take a while before it is ready to accept requests.)
+copy and paste this URL into your browser's address bar, and verify that your app is up and running there. 
 
 ### Test deployment under load
 
-To test the load on the deployment we will use Siege, a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
+To test the load on the deployment we will use [siege](https://linux.die.net/man/1/siege), a command-line tool used to test and analyze the performance of web servers. It can generate a significant amount of traffic to test the response of a web server under load.
 
 Install Siege on node-0:
 
@@ -107,16 +114,27 @@ siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test
 
 Here Siege will generate traffic to a "test" endpoint on your website, which requests a prediction for a pre-saved image, for 30 seconds with a concurrency level of 10 users. After it finishes execution, make a note of key results - how many transactions were served successfully, how many failed, the transaction rate, and what the average response time was (note that this includes inference time, as well as several other elements). 
 
+
+### Stop the deployment
+
+
 When you are done with your experiment, make sure to delete the deployment and service. To delete, run the command:
 
 ``` 
 kubectl delete -f ~/k8s-ml/deploy_k8s/deployment_k8s.yaml
 ```
+
 and look for output like
 
 ```
-service "flask-test-service" deleted
-deployment.apps "flask-test-app" deleted
+service "ml-kube-service" deleted
+deployment.apps "ml-kube-app" deleted
 ```
 
+Use
 
+``` 
+kubectl get pods -o wide
+```
+
+and verify that (eventually) no pods are running your app.
