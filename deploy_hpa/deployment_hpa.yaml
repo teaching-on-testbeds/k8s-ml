@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-test-service
+  name: ml-service-lb
 spec:
   selector:
     app: ml-app-hpa
@@ -42,15 +42,22 @@ spec:
         app: ml-app-hpa
     spec:
       containers:
-      - name: ml-app-hpa
+      - name: ml-app
         image: node-0:5000/ml-app:0.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+        readinessProbe:
+          httpGet:
+            path: /test
+            port: 5000
+          periodSeconds: 5
+          initialDelaySeconds: 5
+          successThreshold: 3
         resources:
           limits:
-            cpu: "8"
-            memory: "5Gi"
+            cpu: "2"
+            memory: "4Gi"
           requests:
-            cpu: "5"
-            memory: "5Gi"
+            cpu: "1"
+            memory: "2Gi"
