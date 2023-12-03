@@ -4,7 +4,7 @@ In this assignment, you will execute a sequence of experiments on the Chameleon 
 
 These instructions assume you have already completed the [Hello, Chameleon](https://teaching-on-testbeds.github.io/blog/hello-chameleon) sequence to configure your account and learn how to use the testbed.
 
-* [Train your model](train_model/finetune_food_classification_model.ipynb)
+* [Train your model](https://colab.research.google.com/github/teaching-on-testbeds/k8s-ml/blob/master/train/fine_tune_food.ipynb)
 * [Set up Kubernetes deployment](reserve_kvm/index.md)
 * [Deploy model to a web service with Flask + Docker](deploy_app/index.md)
 * [Deploy service using container orchestration (Kubernetes)](deploy_k8s/index.md)
