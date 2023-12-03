@@ -6,4 +6,4 @@ Your task now is to optimize your model and your deployment to:
 * minimize resource usage
 * maximize accuracy
 
-by modifying the trained model and the Kubernets configuration. You may find it challenging to find a good balance on all three criteria at the same time!
+by modifying the trained model and the Kubernetes configuration. You may find it challenging to find a good balance on all three criteria at the same time!
