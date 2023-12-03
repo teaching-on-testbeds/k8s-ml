@@ -1,3 +1,5 @@
+## Deploying machine learning systems on Kubernetes
+
 Congratulations! You've been offered an exciting and lucrative new position. You're going to be a machine learning engineer at a small startup company called GourmetGram. They are developing an online photo sharing community focused on food. 
 
 On your first day at work, you are given the following brief:
