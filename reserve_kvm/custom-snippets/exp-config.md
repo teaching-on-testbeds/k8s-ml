@@ -141,6 +141,10 @@ for ip in server_ips:
 ```
 :::
 
+::: {.cell .markdown}
+
+The following cell may raise an error if some of your nodes are still getting set up! If that happens, wait a few minutes and try again. (And then a few minutes more, and try again, if it still raises an error.)
+:::
 
 ::: {.cell .code}
 ```python
