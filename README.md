@@ -23,10 +23,10 @@ Next, you should [train your model](https://colab.research.google.com/github/tea
 After that, you've been given a sequence that shows you how to reserve a cloud "cluster" on Chameleon, and deploy a web app using your model on this cluster, using several deployment strategies:
 
 * [Set up Kubernetes deployment](reserve_kvm/index.md)
-* [Deploy model to a web service with Flask + Docker](deploy_app/index.md) (assumes you have set up a Kubernetes deployment)
-* [Deploy service using container orchestration (Kubernetes)](deploy_k8s/index.md) (assumes you have set up a Kubernetes deployment)
-* [Deploy a load balanced service](deploy_lb/index.md) (assumes you have set up a Kubernetes deployment)
-* [Deploy a service with dynamic scaling](deploy_hpa/index.md) (assumes you have set up a Kubernetes deployment)
+* [Deploy model to a web service with Flask + Docker](deploy_app/index.md) (after setting up a Kubernetes deployment)
+* [Deploy service using container orchestration (Kubernetes)](deploy_k8s/index.md) (after setting up a Kubernetes deployment)
+* [Deploy a load balanced service](deploy_lb/index.md) (after setting up a Kubernetes deployment)
+* [Deploy a service with dynamic scaling](deploy_hpa/index.md) (after setting up a Kubernetes deployment)
 
 Finally, you'll need to develop your own solution, given the brief above. You'll train your own model and design your own deployment strategy.
 
