@@ -152,11 +152,10 @@ print("ssh cc@" + server_ips[0])
 
 ::: {.cell .markdown}
 
-Now, you can open an SSH session on any of the nodes as follows:
+Now, you can open an SSH session as follows:
 
 * In Jupyter, from the menu bar, use File > New > Terminal to open a new terminal.
-* Copy an SSH command from the output above, and paste it into the terminal.
-* You can repeat this process (open several terminals) to start a session on each node. Each terminal session will have a tab in the Jupyter environment, so that you can easily switch between them.
+* Copy the SSH command from the output above, and paste it into the terminal.
 
 Alternatively, you can use your local terminal to log on to each node, if you prefer. (On your local terminal, you may need to also specify your key path as part of the SSH command, using the `-i` argument followed by the path to your private key.)
 
