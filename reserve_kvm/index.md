@@ -35,7 +35,7 @@ Near the beginning of the notebook, you are asked to specify your Chameleon proj
 * execute the notebook, one cell at a time, in order
 * or use Run \> Run All Cells from the menu to execute the entire notebook
 
-It will take about 30-45 minutes to set up the entire experiment, so you can step away and come back after it is finished! (but, you should keep an eye out in case any cell fails and stops the process in the middle.) Then, scroll to the bottom of the notebook to get instructions for (1) logging in to the "controller" node in your cluster, and (2) transferring a saved model from your local device to the "controller" node in your cluster.
+It will take about an hour to set up the entire experiment, so you can step away and come back after it is finished! (but, you should keep an eye out in case any cell fails and stops the process in the middle.) Then, scroll to the bottom of the notebook to get instructions for (1) logging in to the "controller" node in your cluster, and (2) transferring a saved model from your local device to the "controller" node in your cluster.
 
 ### Releasing resources
 
