@@ -49,7 +49,7 @@ When you are not actively working on resources anymore, you will:
 
 In some cases, if there is an error when releasing resources using the notebook, you may need to manually release resource from the [KVM@TACC web interface](https://kvm.tacc.chameleoncloud.org/project/). Here are the instructions for manually releasing resources:
 
-* First, click on Network \> Floating IPs. In any row that includes your username in the "Mapped Fixed IP Address" column, click "Disassociate", then "Release Floating IP".
-* Next, click on Compute \> Instances. Check the box next to any instance(s) that include your username. Then, click "Delete Instances".
-* Click on Network \> Routers. In any row that includes your username, click "Clear Gateway" then "Delete Router".
-* Click on Network \> Networks. Check the box next to any network(s) that include your username. Then, click "Delete Networks".
+* First, click on Network \> Floating IPs. In any row that includes your username in the "Mapped Fixed IP Address" column, click "Disassociate", then "Release Floating IP". Wait until this is finished.
+* Next, click on Compute \> Instances. Check the box next to any instance(s) that include your username. Then, click "Delete Instances". Wait until this is finished.
+* Click on Network \> Routers. In any row that includes your username, click "Clear Gateway" then "Delete Router". Wait until this is finished.
+* Click on Network \> Networks. Check the box next to any network(s) that include your username. Then, click "Delete Networks". Wait until this is finished.
