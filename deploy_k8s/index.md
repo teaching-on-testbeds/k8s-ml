@@ -68,7 +68,7 @@ NAME                                               READY   STATUS              R
 ml-kube-app-7b4c8648c6-r8zvv                    0/1     ContainerCreating   0          22s     <none>        node-2   <none>           <none>
 ```
 
-In this example, the status of the pod is `ContainerCreating`, which means the container is getting ready. When it reaches the `Running` state, then it means the pod is healthy and is running. When it shows "1/1" in the "Ready" column, it is ready to accept services according to the probe we had set up.
+In this example, the status of the pod is `ContainerCreating`, which means the container is getting ready. When it reaches the `Running` state, then it means the pod is healthy and is running. When it shows "1/1" in the "Ready" column, it is ready to accept requests according to the probe we had set up.
 
 (As before, if your model is large, it may take a while before it is ready to accept requests.)
 
