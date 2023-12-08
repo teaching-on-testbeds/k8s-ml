@@ -35,7 +35,7 @@ node_0.exclusive = True
 node_0.routable_control_ip = True
 node_0.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD'
 iface0 = node_0.addInterface('interface-0', rspec.IPv4Address('192.168.1.10','255.255.255.0'))
-node_0.addService(pg.Execute('/bin/sh','bash /local/repository/reserve_cloudlab/setup.sh'))
+node_0.addService(rspec.Execute('/bin/sh','bash /local/repository/reserve_cloudlab/setup.sh'))
 
 node_1 = request.XenVM("node-1")
 node_1.cores = 4
