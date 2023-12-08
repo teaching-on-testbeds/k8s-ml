@@ -16,6 +16,10 @@ On your first day at work, you are given the following brief:
 
 You've been giving some material to ease the onboarding process - 
 
+---
+
+#### Onboarding for Chameleon users
+
 First, you should have already completed the [Hello, Chameleon](https://teaching-on-testbeds.github.io/blog/hello-chameleon) sequence to configure your account and learn how to use Chameleon.
 
 Next, you should [train your model](https://colab.research.google.com/github/teaching-on-testbeds/k8s-ml/blob/master/train/fine_tune_food.ipynb).
@@ -34,4 +38,23 @@ Finally, you'll need to develop your own solution, given the brief above. You'll
 
 ---
 
+#### Onboarding for CloudLab users
+
+First, you should have already completed the [Hello, CloudLab](https://teaching-on-testbeds.github.io/blog/hello-cloudlab) sequence to configure your account and learn how to use CloudLab.
+
+Next, you should [train your model](https://colab.research.google.com/github/teaching-on-testbeds/k8s-ml/blob/master/train/fine_tune_food.ipynb).
+
+After that, you've been given a sequence that shows you how to reserve a cloud "cluster" on CloudLab, and deploy a web app using your model on this cluster, using several deployment strategies:
+
+* [Set up Kubernetes deployment](reserve_cloudlab/index.md)
+* [Deploy model to a web service with Flask + Docker](deploy_app/index.md) (after setting up a Kubernetes deployment)
+* [Deploy service using container orchestration (Kubernetes)](deploy_k8s/index.md) (after setting up a Kubernetes deployment)
+* [Deploy a load balanced service](deploy_lb/index.md) (after setting up a Kubernetes deployment)
+* [Deploy a service with dynamic scaling](deploy_hpa/index.md) (after setting up a Kubernetes deployment)
+
+Finally, you'll need to develop your own solution, given the brief above. You'll train your own model and design your own deployment strategy.
+
+* [Optimize your deployment](challenge/index.md)
+
+---
 This material is based upon work supported by the National Science Foundation under Grant No. 2230079. 
