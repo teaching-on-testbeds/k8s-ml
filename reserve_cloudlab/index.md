@@ -37,7 +37,7 @@ Set up a Kubernetes cluster with
 bash /local/repository/reserve_cloudlab/setup.sh
 ```
 
-This may take about 30 minutes. When it is finished, close your SSH session, and open a *new* one.
+This may take about 30 minutes. When it is finished, close your SSH session on "node-0", and open a *new* SSH session on "node-0".
 
 To verify the Kubernetes and Docker install, run
 
