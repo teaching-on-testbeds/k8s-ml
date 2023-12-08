@@ -53,7 +53,7 @@ done
 
 # Set up private distribution registry
 # needs to be in new session
-ssh -o StrictHostKeyChecking=no node-1 "docker run -d -p 5000:5000 --restart always --name registry registry:2"
+ssh -o StrictHostKeyChecking=no node-0 "docker run -d -p 5000:5000 --restart always --name registry registry:2"
 
 sudo wget https://raw.githubusercontent.com/teaching-on-testbeds/k8s-ml/main/config/daemon.json -O /etc/docker/daemon.json; sudo service docker restart
 ssh -o StrictHostKeyChecking=no node-1 "sudo wget https://raw.githubusercontent.com/teaching-on-testbeds/k8s-ml/main/config/daemon.json -O /etc/docker/daemon.json; sudo service docker restart"
