@@ -127,61 +127,6 @@ remote.execute("docker run hello-world")
 :::
 
 
-
-::: {.cell .markdown}
-
-### Get SSH login details
-
-:::
-
-
-::: {.cell .markdown}
-
-At this point, we should be able to log in to our "controller" node over SSH! Run the following cell, and observe the output - you will see an SSH command this node.
-
-:::
-
-
-::: {.cell .code}
-```python
-print("ssh ubuntu@" + server_ips[0])
-```
-:::
-
-
-
-::: {.cell .markdown}
-
-Now, you can open an SSH session on any of the nodes as follows:
-
-* In Jupyter, from the menu bar, use File > New > Terminal to open a new terminal.
-* Copy an SSH command from the output above, and paste it into the terminal.
-* You can repeat this process (open several terminals) to start a session on each node. Each terminal session will have a tab in the Jupyter environment, so that you can easily switch between them.
-
-Alternatively, you can use your local terminal to log on to each node, if you prefer. (On your local terminal, you may need to also specify your key path as part of the SSH command, using the `-i` argument followed by the path to your private key.)
-
-:::
-     
-
-::: {.cell .markdown}
-
-You can also use `scp` to transfer a file to the remote host from your local terminal. Later in this exercise, you will want to transfer a file named `model.keras` to the directory `~/k8s-ml/app/` on this remote host. If your private key is in `~/.ssh/id_rsa_chameleon`, you would:
-
-* open a *local* terminal on your own device in the same directory where your `model.keras` is located
-* run the cell below
-* copy and paste the output into your terminal to transfer the file.
-
-
-:::
-     
-::: {.cell .code}
-```python
-print("scp -i ~/.ssh/id_rsa_chameleon model.keras ubuntu@" + server_ips[0] + ":~/k8s-ml/app/")
-```
-:::
-
-
-
 ::: {.cell .markdown}
 
 ### Get SSH login details
@@ -222,6 +167,7 @@ The easiest way is to use a free file upload service, then download the file on 
 
 * upload your `model.keras` file to https://www.file.io/
 * copy the download link that is provided, and paste it in the following cell
+* un-comment the second line in the cell
 * run the cell
 
 :::
@@ -229,6 +175,6 @@ The easiest way is to use a free file upload service, then download the file on 
 ::: {.cell .code}
 ```python
 download_url = "https://file.io/XXXXXXXXXXXX" # replace this URL
-_ = remote.execute("wget " + download_url + " -O ~/k8s-ml/app/model.keras")
+# _ = remote.execute("wget " + download_url + " -O ~/k8s-ml/app/model.keras")
 ```
 :::
