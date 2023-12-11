@@ -116,7 +116,7 @@ then I would run in my local terminal:
 scp -i ~/.ssh/id_rsa ~/Desktop/model.keras ffund00@128.110.223.18:~/k8s-ml/app/model.keras
 ```
 
-Once the file transfer is 100% complete, you will re-build the container with the new model. On "node-0":
+**Build the container with your model**: Once the file transfer is 100% complete, you will re-build the container with the new model. On "node-0":
 
 ```
 docker build --no-cache -t ml-app:0.0.1 ~/k8s-ml/app
@@ -136,7 +136,15 @@ Wait a few minutes until all five pods are "ready":
 kubectl get pods -o wide
 ```
 
-then delete the deployment:
+Get the URL of the service - run
+
+```
+echo http://$(curl -s ifconfig.me/ip):32000
+```
+
+copy and paste this URL into your browser's address bar, and verify that your app is up and running there. 
+
+Then delete the deployment:
 
 ```
 kubectl delete -f ~/k8s-ml/deploy_lb/deployment_lb.yaml
