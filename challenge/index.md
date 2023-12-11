@@ -16,7 +16,7 @@ In a "real" deployment, you would certainly want to measure your model's accurac
 
 How might you do this, given that "ground truth" labels are not available for live data when the system is deployed? One possible approach would be to use a "held out" set - for a subset of actual user photo uploads, ask users to specify the category instead of assigning one automatically using your model. Use this "held out" set to evaluate your model, by comparing your model output to the user-assigned label.
 
-At this phase in product development, though, you don't have any users or "live" data. You are still evaluating accuracy on the "Food-11" dataset, using the "Train a food classification" notebook.
+At this phase in product development, though, you don't have any users or "live" data. You are still evaluating accuracy on the evaluation set of the "Food-11" dataset, using the "Train a food classification" notebook.
 
 ### Measuring resource usage
 
