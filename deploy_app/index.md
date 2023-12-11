@@ -60,7 +60,7 @@ docker ps -f ancestor=node-0:5000/ml-app:0.0.1
 Now we can visit our web service and try it out! Run this command on "node-0" to get the URL to use:
 
 ```
-echo http://$(curl -s ipinfo.io/ip):32000
+echo http://$(curl -s ifconfig.me/ip):32000
 ```
 
 Then, open your browser, paste this URL into the address bar, and hit Enter.

@@ -40,7 +40,7 @@ kubectl top pod
 Get the URL of the service - run
 
 ``` shell
-echo http://$(curl -s ipinfo.io/ip):32000
+echo http://$(curl -s ifconfig.me/ip):32000
 ```
 
 copy and paste this URL into your browser's address bar, and verify that your app is up and running there. 
@@ -57,7 +57,7 @@ to monitor the pod's resource usage in real time (This will be updated every 5 s
 
 
 ```
-siege -c 10 -t 30s http://$(curl -s ipinfo.io/ip):32000/test
+siege -c 10 -t 30s http://$(curl -s ifconfig.me/ip):32000/test
 ```
 
 After it finishes execution, make a note of key results - how many transactions were served successfully, how many failed, the transaction rate, and what the average response time was (note that this includes inference time, as well as several other elements). 

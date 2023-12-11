@@ -35,7 +35,7 @@ Initially, you will see one pod in the deployment. Wait until the pod is "Runnin
 Get the URL of the service - run
 
 ```
-echo http://$(curl -s ipinfo.io/ip):32000
+echo http://$(curl -s ifconfig.me/ip):32000
 ```
 
 copy and paste this URL into your browser's address bar, and verify that your app is up and running there. 
@@ -55,7 +55,7 @@ to see the current state of the autoscaler.
 
 
 ```
-siege -c 10 -t 360s http://$(curl -s ipinfo.io/ip):32000/test
+siege -c 10 -t 360s http://$(curl -s ifconfig.me/ip):32000/test
 ```
 
 Note that this test is of a longer duration, so that you will have time to observe additional replicas being brought up and becoming ready to use. 
