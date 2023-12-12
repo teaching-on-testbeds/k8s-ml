@@ -25,7 +25,8 @@ To monitor resource usage over time, a Python script is provided for you.
 First, on "node-0", run
 
 ```
-python -m pip3 install kubernetes
+sudo apt update; sudo apt -y install python3-pip # install pip if not already installed
+python -m pip install kubernetes
 ```
 
 to install the Python Kubernetes client. 
@@ -70,6 +71,13 @@ You can use any data analysis tool for CSV files (e.g. Python with `pandas`) on 
 
 
 To evaluate response time, we will use a `bash` script that runs sequence of `siege` tests, each lasting one minute, with varying load conditions.
+
+
+First, on "node-0", make sure you have installed `siege`:
+
+```
+sudo apt update; sudo apt -y install siege
+```
 
 Get the script on "node-0" by running:
 
@@ -142,7 +150,7 @@ Get the URL of the service - run
 echo http://$(curl -s ifconfig.me/ip):32000
 ```
 
-copy and paste this URL into your browser's address bar, and verify that your app is up and running there. 
+copy and paste this URL into your browser's address bar, and verify that your app is up and running there. (This step is to make sure that your app is functional - the load test won't tell you if your model is actually completing the inference step successfully.)
 
 Then delete the deployment:
 
