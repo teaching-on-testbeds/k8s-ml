@@ -176,7 +176,7 @@ In one SSH terminal, apply your `deployment.yaml`:
 kubectl apply -f ~/deployment.yaml
 ```
 
-You can wait a few minutes for the intiial pod(s) to be ready:
+You can wait a few minutes for the intial pod(s) to be ready:
 
 ```
 kubectl get pods -o wide
@@ -205,7 +205,7 @@ After it ends, you can analyze the data in the `resource_usage.csv` and `load_ou
 
 * **Memory requested**: compute the mean of the `mem_req_KB` column in `resource_usage.csv`.
 * **Memory used**: compute the mean of the `mem_use_KB` column in `resource_usage.csv`.
-* **Transaction rate**: compute the sum of the `OKAY` column in `load_output.csv`, and divide by `60*60`. This is the number of successful transactions per second.
+* **Transaction rate**: compute the sum of the `OKAY` column in `load_output.csv`, and divide by `30*60`. This is the number of successful transactions per second.
 * **Response time**: in `load_output.csv`, sum the product of the `OKAY` column and the `Resp Time,` column, then divide by the sum of the `OKAY` column. This is the response time in seconds, averaged across all of the transactions in the test. (Do *not* just use the average of the `Resp Time.` column.)
 
 Make sure to save all of the test artifacts - the results `resource_usage.csv` and `load_output.csv`, along with the actual saved model, `model.keras` and the deployment strategy `deployment.yaml` - in a safe place *off* of "node-0" since:
