@@ -5,13 +5,13 @@ clean:
 
 CUSTDIR := custom-snippets
 SNIPDIR := ../fabric-snippets
-SNIPPETS := $(SNIPDIR)/fab-config.md $(SNIPDIR)/reserve-resources.md $(SNIPDIR)/configure-resources.md $(SNIPDIR)/draw-topo-detailed-labels.md 
-reserve_fabric.ipynb: $(SNIPPETS) $(CUSTDIR)/intro.md $(CUSTDIR)/exp-def.md $(CUSTDIR)/exp-kubespray.md
+SNIPPETS := $(SNIPDIR)/fab-config.md $(SNIPDIR)/configure-resources.md $(SNIPDIR)/draw-topo-detailed-labels.md 
+reserve_fabric.ipynb: $(SNIPPETS) $(CUSTDIR)/intro.md $(CUSTDIR)/exp-def.md $(CUSTDIR)/exp-kubespray.md $(CUSTDIR)/reserve-resources.md
 	pandoc --wrap=none \
                 -i $(CUSTDIR)/intro.md \
 				$(SNIPDIR)/fab-config.md \
 				$(CUSTDIR)/exp-def.md \
-				$(SNIPDIR)/reserve-resources.md \
+				$(CUSTDIR)/reserve-resources.md \
 				$(SNIPDIR)/configure-resources.md \
 				$(SNIPDIR)/draw-topo-detailed-labels.md \
 				$(CUSTDIR)/exp-kubespray.md \
