@@ -60,7 +60,7 @@ Finally, you'll need to develop your own solution, given the brief above. You'll
 
 #### Onboarding for FABRIC users
 
-[!WARNING] If you're using FABRIC, you won't be able to directly visit your web service in your own browser, since it is behind a bastion host for security. You will have to first set up an SSH tunnel to the bastion host to view your web service. However, you can complete this sequence without actually viewing your web service.
+> [!WARNING] If you're using FABRIC, you won't be able to directly visit your web service in your own browser, since it is behind a bastion host for security. You will have to first set up an SSH tunnel to the bastion host to view your web service. However, you can complete this sequence without actually viewing your web service.
 
 
 First, you should have already completed the [Hello, FABRIC](https://teaching-on-testbeds.github.io/blog/hello-fabric) sequence to configure your account and learn how to use FABRIC.
