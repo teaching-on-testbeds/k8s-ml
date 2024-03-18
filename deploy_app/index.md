@@ -41,7 +41,7 @@ docker run -d -p 32000:5000 node-0:5000/ml-app:0.0.1
 
 Here, 
 
--   `-d` is for detach mode - so we can leave it running int he background.
+-   `-d` is for detach mode - so we can leave it running in the background.
 -   `-p` is to assign the mapping between "incoming request port" (32000) and "container port' (5000).
 
 
