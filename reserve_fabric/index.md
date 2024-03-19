@@ -1,4 +1,4 @@
-## Exercise : Set up your experiment at FANROC
+## Exercise : Set up your experiment at FABRIC
 
 Before you run an experiment at FABRIC, you will:
 
